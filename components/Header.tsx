@@ -14,7 +14,7 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/images/whatsapp-20image-202025-11-14-20at-2011.jpg"
+            src="/images/Logo.jpg"
             alt="Sameera Auto Traders Logo"
             width={120}
             height={60}
