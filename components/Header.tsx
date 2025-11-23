@@ -21,7 +21,23 @@ export function Header() {
             className="object-contain"
             priority
           />
-          <span className="text-2xl font-bold text-primary">Smart AutoHub</span>
+          {/* <span className="text-2xl font-bold text-primary">Smart AutoHub</span> */}
+          <div className="flex flex-col sm:flex-row sm:items-center leading-tight">
+            <span className="text-3xl font-extrabold tracking-wide 
+              bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent px-1">
+              Smart
+            </span>
+
+            <span className="text-3xl font-extrabold text-black sm:ml-1">
+              Auto
+            </span>
+
+            <span className="text-3xl font-extrabold text-red-700">
+              Hub
+            </span>
+          </div>
+
+
         </Link>
 
         {/* Desktop Navigation */}
