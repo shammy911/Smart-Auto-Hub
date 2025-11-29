@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import { Menu, X, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { headerMenuData } from "@/constants/data"
@@ -11,11 +11,19 @@ import path from "path"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const pathname = usePathname();
+
+  //MOCK AUTH
+  const isLoggedIn = true;
+  const userRole = "admin";
+  const userName = "Kavindu";
 
   return (
     <header className="bg-background border-b border-border sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        
+        {/* LOGO */}
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/images/Logo.jpg"
@@ -26,6 +34,8 @@ export function Header() {
             priority
           />
           {/* <span className="text-2xl font-bold text-primary">Smart AutoHub</span> */}
+
+          {/* WORDMARK */}
           <div className="flex flex-col sm:flex-row leading-tight sm:items-center">
               
               {/* Smart */}
@@ -74,14 +84,45 @@ export function Header() {
           </Link> */}
         </div>
 
+        {/* DESKTOP AUTH / PROFILE */}
         {/* Auth Buttons */}
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="outline" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/register">Register</Link>
-          </Button>
+          {!isLoggedIn ? (
+          <>
+            <Button variant="outline" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">Register</Link>
+            </Button>
+          </>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-2 px-3 py-2 border rounded-lg hover:bg-accent"
+              >
+                <User size={18} />
+                {userName}
+              </button>
+
+              {/* Profile Dropdown */}
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-card shadow-lg border rounded-lg p-2">
+                  <Link href="/dashboard" className="block px-3 py-2 hover:bg-accent">Dashboard</Link>
+                  <Link href="/bookings" className="block px-3 py-2 hover:bg-accent">My Bookings</Link>
+
+                  {userRole === "admin" && (
+                    <Link href="/admin" className="block px-3 py-2 hover:bg-accent text-red-600 font-semibold">
+                      Admin Panel
+                    </Link>
+                  )}
+
+                  <button className="block w-full text-left px-3 py-2 hover:bg-accent">Logout</button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -90,11 +131,11 @@ export function Header() {
         </button>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* ---------------- MOBILE MENU ---------------- */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-card border-t border-border">
           <div className="px-4 py-4 space-y-4">
-            <Link href="/" className="block text-foreground hover:text-primary">
+            {/* <Link href="/" className="block text-foreground hover:text-primary">
               Home
             </Link>
             <Link href="/vehicles" className="block text-foreground hover:text-primary">
@@ -108,15 +149,51 @@ export function Header() {
             </Link>
             <Link href="/contact" className="block text-foreground hover:text-primary">
               Contact
-            </Link>
-            <div className="flex gap-2 pt-4">
-              <Button variant="outline" asChild className="flex-1 bg-transparent">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild className="flex-1">
-                <Link href="/register">Register</Link>
-              </Button>
-            </div>
+            </Link> */}
+
+              {/* MAIN NAV */}
+            {headerMenuData.map((item) => (
+              <Link key={item.href} href={item.href} className="block text-foreground hover:text-primary">
+                {item.title}
+              </Link>
+            ))}
+
+            {/* ---------------- LOGGED-IN SECTION ---------------- */}
+
+            {isLoggedIn && (
+              <>
+                <hr className="border-border" />
+
+                {/* USER BLOCK */}
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <User size={18} className="text-primary" />
+                  {userName} {userRole === "admin" && "(Admin)"}
+                </div>
+
+                <Link href="/dashboard" className="block hover:text-primary">Dashboard</Link>
+                <Link href="/bookings" className="block hover:text-primary">My Bookings</Link>
+
+                {userRole === "admin" && (
+                  <Link href="/admin" className="block text-red-600 hover:text-red-700 font-semibold">
+                    Admin Panel
+                  </Link>
+                )}
+
+                <button className="block text-left w-full hover:text-primary pt-2">Logout</button>
+              </>
+            )}
+
+            {/* ---------------- LOGGED-OUT SECTION ---------------- */}
+            {!isLoggedIn && (
+              <div className="flex gap-2 pt-4">
+                <Button variant="outline" asChild className="flex-1 bg-transparent">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild className="flex-1">
+                  <Link href="/register">Register</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
