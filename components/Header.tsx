@@ -24,7 +24,7 @@ export function Header() {
   const pathname = usePathname();
 
   //MOCK AUTH
-  const isLoggedIn = true;
+  const isLoggedIn = false;
   const userRole = "admin";
   const isAdmin = true;
   const userName = "Kavindu";
@@ -166,15 +166,15 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/login" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
-                      <span>Sign In</span>
+                      <span>Login to See your Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  {/* <DropdownMenuItem asChild>
                     <Link href="/dashboard" className="cursor-pointer">
                       <LayoutDashboard className="mr-2 h-4 w-4" />
                       <span>Dashboard</span>
                     </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
               <Button variant="outline" asChild>
