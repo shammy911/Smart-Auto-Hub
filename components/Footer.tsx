@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin } from "lucide-react"
+import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
 
 export function Footer() {
   return (
@@ -60,7 +60,7 @@ export function Footer() {
                 <Twitter size={20} />
               </a>
               <a href="#" className="hover:text-primary transition" aria-label="LinkedIn">
-                <Linkedin size={20} />
+                <Instagram size={20} />
               </a>
             </div>
           </div>
