@@ -60,7 +60,7 @@ export default function ConsultationPage() {
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"></div>
         <div className="relative max-w-7xl mx-auto px-4 w-full">
-          <h1 className="text-6xl font-bold mb-4 text-balance">Book a Consultation</h1>
+          <h1 className="text-6xl font-bold mb-4 text-balance">Book an Appointment</h1>
           <p className="text-xl opacity-90 text-balance max-w-2xl">
             Connect with our technical experts for personalized vehicle guidance and advice.
           </p>
