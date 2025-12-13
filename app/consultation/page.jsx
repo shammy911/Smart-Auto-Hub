@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
-import { Calendar, Clock, User, MapPin, MessageSquare } from 'lucide-react'
+import { Calendar, Clock, User, MapPin, MessageSquare, AlertCircle, Loader2 } from 'lucide-react'
 import ChatBot from "@/components/ChatBot"
 import { resolve } from "path"
 import { setTimeout } from "timers/promises"
@@ -225,9 +225,9 @@ export default function ConsultationPage() {
               <h2 className="text-3xl font-bold mb-6">Schedule Your Consultation</h2>
 
               {submitted && (
-                <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200">
+                <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 animate-in fade-in slide-in-from-top-2 duration-300">
                   <p className="text-green-800 font-semibold">
-                    Thank you! We've received your consultation request. Our team will contact you shortly.
+                    Thank you! We've received your request. Our team will contact you shortly.
                   </p>
                 </div>
               )}
@@ -241,10 +241,19 @@ export default function ConsultationPage() {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    required
+                    onBlur={handleBlur}
                     placeholder="John Doe"
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    className={getInputClassName(
+                      "fullName",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    )}
                   />
+                  {errors.fullName && touched.fullName && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.fullName}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -255,10 +264,19 @@ export default function ConsultationPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
+                    onBlur={handleBlur}
                     placeholder="john@example.com"
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-                    />
+                    className={getInputClassName(
+                      "email",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    )}
+                  />
+                  {errors.email && touched.email && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.email}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Phone */}
@@ -269,10 +287,19 @@ export default function ConsultationPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    required
+                    onBlur={handleBlur}
                     placeholder="0771234567"
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    className={getInputClassName(
+                      "phone",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition",
+                    )}
                   />
+                  {errors.phone && touched.phone && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.phone}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Vehicle Type */}
@@ -282,8 +309,11 @@ export default function ConsultationPage() {
                     name="vehicleType"
                     value={formData.vehicleType}
                     onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    onBlur={handleBlur}
+                    className={getInputClassName(
+                      "vehicleType",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition",
+                    )}
                   >
                     <option value="">Select a vehicle type</option>
                     <option value="sedan">Sedan</option>
@@ -292,6 +322,12 @@ export default function ConsultationPage() {
                     <option value="van">Van</option>
                     <option value="hybrid">Hybrid</option>
                   </select>
+                  {errors.vehicleType && touched.vehicleType && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.vehicleType}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Consultation Type */}
@@ -306,13 +342,19 @@ export default function ConsultationPage() {
                           value={type}
                           checked={formData.consultationType === type}
                           onChange={handleChange}
-                          required
+                          onBlur={handleBlur}
                           className="w-4 h-4"
                         />
                         <span className="text-sm">{type}</span>
                       </label>
                     ))}
                   </div>
+                  {errors.consultationType && touched.consultationType && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.consultationType}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Preferred Date */}
@@ -323,9 +365,19 @@ export default function ConsultationPage() {
                     name="preferredDate"
                     value={formData.preferredDate}
                     onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    onBlur={handleBlur}
+                    min={new Date().toISOString().split("T")[0]}
+                    className={getInputClassName(
+                      "preferredDate",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition",
+                    )}
                   />
+                  {errors.preferredDate && touched.preferredDate && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.preferredDate}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Preferred Time */}
@@ -335,8 +387,11 @@ export default function ConsultationPage() {
                     name="preferredTime"
                     value={formData.preferredTime}
                     onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    onBlur={handleBlur}
+                    className={getInputClassName(
+                      "preferredTime",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition",
+                    )}
                   >
                     <option value="">Select a time slot</option>
                     <option value="09:00-10:00">09:00 - 10:00 AM</option>
@@ -346,6 +401,12 @@ export default function ConsultationPage() {
                     <option value="15:00-16:00">03:00 - 04:00 PM</option>
                     <option value="16:00-17:00">04:00 - 05:00 PM</option>
                   </select>
+                  {errors.preferredTime && touched.preferredTime && (
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs">
+                      <AlertCircle size={12} />
+                      <span>{errors.preferredTime}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Message */}
@@ -357,14 +418,23 @@ export default function ConsultationPage() {
                     onChange={handleChange}
                     placeholder="Tell us more about your needs..."
                     rows="4"
-                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none transition"
                   />
                 </div>
 
                 {/* Submit Button */}
-                <Button type="submit" className="w-full" size="lg">
-                  <Calendar className="mr-2" size={18} />
-                  Schedule Consultation
+                <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 animate-spin" size={18} />
+                      Scheduling...
+                    </>
+                  ) : (
+                    <>
+                      <Calendar className="mr-2" size={18} />
+                      Schedule Appointment
+                    </>
+                  )}
                 </Button>
               </form>
             </div>
