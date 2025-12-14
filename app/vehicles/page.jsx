@@ -6,9 +6,10 @@ import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
-import { Loader2, MessageSquare } from "lucide-react"
+import { Grid3x3, Heart, List, Loader2, MessageSquare } from "lucide-react"
 import ChatBot from "@/components/ChatBot"
 import { vehicleAPI } from "../../lib/api/vehicles"
+import { localStorageAPI } from "@/lib/storage/localStorage.js"
 
 
 export default function VehiclesPage() {
@@ -48,6 +49,10 @@ export default function VehiclesPage() {
   const [searchQuery, setSearchQuery] = useState(initialSearch)
   const [locationFilter, setLocationFilter] = useState(initialLocation)
 
+  const [favourites, setFavourites] = useState([])
+
+  const [viewMode, setViewMode] = useState("grid")
+
   useEffect(() => {
     const fetchVehicles = async () => {
       setLoading(true)
@@ -86,6 +91,12 @@ export default function VehiclesPage() {
     sortBy,
   ])
 
+  useEffect(() => {
+    setFavourites(localStorageAPI.getFavourites())
+    const prefs = localStorageAPI.getPreferences()
+    setViewMode(prefs.viewMode || "grid")
+  }, [])
+
   const totalPages = Math.ceil(vehicles.length / vehiclesPerPage)
   const startIndex = (currentPage - 1) * vehiclesPerPage
   const endIndex = startIndex + vehiclesPerPage
@@ -106,6 +117,24 @@ export default function VehiclesPage() {
     setMinMileage(0)
     setMaxMileage(50000)
     setSortBy("newest")
+  }
+
+  const toggleFavourite = (e, vehicleId) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (localStorageAPI.isFavourite(vehicleId)) {
+      const updated = localStorageAPI.removeFavourite(vehicleId)
+      setFavourites(updated)
+    } else {
+      const updated = localStorageAPI.addFavourite(vehicleId)
+      setFavourites(updated)
+    }
+  }
+
+  const toggleViewMode = (mode) => {
+    setViewMode(mode)
+    localStorageAPI.setPreference("viewMode", mode)
   }
 
   return (
@@ -314,6 +343,24 @@ export default function VehiclesPage() {
                 {loading ? "Loading..." : `Showing ${vehicles.length} vehicles`}
               </p>
               <div className="flex items-center gap-3">
+                <div className="flex gap-1 mr-4">
+                  <Button
+                    variant={viewMode === "grid" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => toggleViewMode("grid")}
+                    className="px-3"
+                  >
+                    <Grid3x3 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === "list" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => toggleViewMode("list")}
+                    className="px-3"
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
                 <label className="text-sm font-semibold">Sort By:</label>
                 <select
                   value={sortBy}
@@ -343,14 +390,16 @@ export default function VehiclesPage() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-4"}>
                   {currentVehicles.map((vehicle) => (
                     <Link
                       key={vehicle.id}
                       href={`/vehicles/${vehicle.id}`}
-                      className="bg-card rounded-lg overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                      className={`bg-card rounded-lg overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group ${viewMode === "list" ? "flex" : ""}`}
                     >
-                      <div className="relative h-56 bg-muted overflow-hidden">
+                      <div
+                        className={`relative bg-muted overflow-hidden ${viewMode === "grid" ? "h-56" : "w-64 h-48"}`}
+                      >
                         <img
                           src={vehicle.image || "/placeholder.svg"}
                           alt={vehicle.name}
@@ -367,9 +416,19 @@ export default function VehiclesPage() {
                         >
                           {vehicle.status}
                         </span>
+                        <button
+                          onClick={(e) => toggleFavourite(e, vehicle.id)}
+                          className="absolute top-4 left-4 p-2 rounded-full bg-white/90 hover:bg-white transition-colors backdrop-blur-sm"
+                        >
+                          <Heart
+                            className={`w-5 h-5 ${
+                              favourites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-gray-600"
+                            }`}
+                          />
+                        </button>
                       </div>
 
-                      <div className="p-5">
+                      <div className="p-5 flex-1">
                         <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition">{vehicle.name}</h3>
                         <p className="text-primary font-bold text-xl mb-3">LKR {vehicle.price.toLocaleString()}</p>
                         <div className="text-sm text-muted-foreground space-y-1">

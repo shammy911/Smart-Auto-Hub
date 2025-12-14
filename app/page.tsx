@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "../components/ui/button"
-import { ChevronRight, Search, Calendar, MessageSquare, Star, Quote, Play } from "lucide-react"
+import { ChevronRight, Search, Calendar, MessageSquare, Star, Quote, Play, Clock } from "lucide-react"
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {useSession} from "next-auth/react";
 import {handleSubscribe} from "@/app/APITriggers/handleSubscribe";
@@ -14,6 +14,7 @@ import Autoplay from "embla-carousel-autoplay"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import ChatBot from "@/components/ChatBot"
 import { useRouter } from "next/navigation"
+import {localStorageAPI} from "@/lib/storage/localStorage.js"
 
 
 interface Vehicle {
@@ -97,15 +98,21 @@ const videoReviews = [
   },
 ]
 
-export default function HomePage() {
+export default function Home() {
 
     const router = useRouter()
     const [email, setEmail] = useState<string>("")
     const {data:session} = useSession();
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedLocation, setSelectedLocation] = useState("all")
+    const [searchHistory, setSearchHistory] = useState([])
+    const [showHistory, setShowHistory] = useState(false)
 
     const handleSearch = () => {
+      if(searchQuery.trim()) {
+        const updated = localStorageAPI.addSearchHistory(searchQuery.trim())
+        setSearchHistory(updated)
+      }
       const params = new URLSearchParams()
       if(searchQuery) params.set("search", searchQuery)
       if(selectedLocation !== "all") params.set("location", selectedLocation)
@@ -116,6 +123,20 @@ export default function HomePage() {
       if(e.key === "Enter") {
         handleSearch()
       }
+    }
+
+    const clearHistory = () => {
+      localStorageAPI.clearSearchHistory()
+      setSearchHistory([])
+    }
+
+    useEffect(() => {
+      setSearchHistory(localStorageAPI.getSearchHistory())
+    }, [])
+
+    const selectHistoryItem = (term) => {
+      setSearchQuery(term)
+      setShowHistory(false)
     }
 
 
@@ -160,15 +181,48 @@ export default function HomePage() {
       {/* Quick Search Bar */}
       <section className="max-w-7xl mx-auto px-4 -mt-12 relative z-10 mb-16">
         <div className="bg-card rounded-lg shadow-lg p-6 border border-border">
-            <div className="flex flex-col md:flex-row gap-4">
-            <input
-              type="text"
-              placeholder="Search by Make, Model..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPass}
-              className="flex-1 px-4 py-3 rounded bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+            <div className="flex flex-col md:flex-row gap-4 relative">
+              <div className="flex-1 relative">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search by Make, Model..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPass}
+                    onFocus={() => setShowHistory(true)}
+                    onBlur={() => setTimeout(() => {
+                      setShowHistory(false)
+                    }, 200)}
+                    className="w-full px-6 py-4 rounded-lg bg-input border-2 border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  />
+                  <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                </div>
+
+                {showHistory && searchHistory.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+                      <span className="text-sm font-semibold text-muted-foreground">Recent Searches</span>
+                      <button
+                        onClick={clearHistory}
+                        className="text-xs text-muted-foreground hover:text-foreground transition"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    {searchHistory.map((term, index) => (
+                      <button
+                        key={index}
+                        onClick={() => selectHistoryItem(term)}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 transition text-left"
+                      >
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span>{term}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             <Select value={selectedLocation}
               onValueChange={setSelectedLocation}
             >
@@ -181,11 +235,9 @@ export default function HomePage() {
               <SelectItem value="colombo">Colombo Branch</SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={handleSearch} className="h-13">
-              <Link href="/vehicles">
+            <Button onClick={handleSearch} size="lg" className="px-8 h-13 font-semibold shadow-lg">
               <Search size={18} className="mr-2" />
               Search
-              </Link>
             </Button>
             </div>
         </div>
@@ -258,7 +310,7 @@ export default function HomePage() {
       <section className="bg-gradient-to-br from-secondary/10 via-primary/5 to-accent/10 py-20 mb-24">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">How It Works</h2>
+            <h2 className="text-4xl md:text-4xl font-bold mb-4">How It Works</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Find your perfect vehicle in three simple steps
             </p>
