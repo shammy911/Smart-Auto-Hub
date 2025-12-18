@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
@@ -42,66 +42,6 @@ const stats = [
 ]
 
 const recentRequests = [
-  {
-    id: 1,
-    customer: "P. K. Dilhara",
-    email: "dilhara@example.com",
-    phone: "077 123 4567",
-    vehicle: "2021 Wagon R",
-    branch: "Nugegoda",
-    type: "Vehicle Viewing",
-    date: "14/11/2025",
-    time: "10:00 AM",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    customer: "S. A. Samaraweera",
-    email: "samaraweera@example.com",
-    phone: "077 234 5678",
-    vehicle: "-",
-    branch: "-",
-    type: "Technical Consultation",
-    date: "15/11/2025",
-    time: "2:30 PM",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    customer: "A. A. Chethiya",
-    email: "chethiya@example.com",
-    phone: "077 345 6789",
-    vehicle: "2022 Prius",
-    branch: "Matara",
-    type: "Vehicle Viewing",
-    date: "16/11/2025",
-    time: "11:00 AM",
-    status: "Confirmed",
-  },
-  {
-    id: 4,
-    customer: "K. K. Lakshan",
-    email: "lakshan@example.com",
-    phone: "077 456 7890",
-    vehicle: "2023 Swift",
-    branch: "Colombo",
-    type: "Test Drive",
-    date: "17/11/2025",
-    time: "3:00 PM",
-    status: "Confirmed",
-  },
-  {
-    id: 5,
-    customer: "H. K. Hissella",
-    email: "hissella@example.com",
-    phone: "077 567 8901",
-    vehicle: "2020 Civic",
-    branch: "Nugegoda",
-    type: "Vehicle Viewing",
-    date: "18/11/2025",
-    time: "9:30 AM",
-    status: "Cancelled",
-  },
 ]
 
 const vehicles = [
@@ -132,24 +72,6 @@ const vehicles = [
 ]
 
 const newsletterSubscribers = [
-  {
-    id: 1,
-    email: "john.doe@example.com",
-    subscribedDate: "10/11/2025",
-    status: "Active",
-  },
-  {
-    id: 2,
-    email: "jane.smith@example.com",
-    subscribedDate: "12/11/2025",
-    status: "Active",
-  },
-  {
-    id: 3,
-    email: "bob.wilson@example.com",
-    subscribedDate: "13/11/2025",
-    status: "Active",
-  },
 ]
 
 const videoReviews = [
@@ -182,15 +104,38 @@ const videoReviews = [
 ]
 
 export default function AdminPage() {
+
   const [activeTab, setActiveTab] = useState("requests")
   const [searchQuery, setSearchQuery] = useState("")
   const [newVideo, setNewVideo] = useState({
     title: "",
     description: "",
     videoId: "",
-  })
+  });
 
-  return (
+    const [recentRequests, setRecentRequests] = useState([]);
+
+    const fetchBookings = async () => {
+        try {
+            const res = await fetch("/api/Consultations/getBooking");
+            const data = await res.json();
+            setRecentRequests(data);
+        } catch (error) {
+            console.error("Failed to fetch bookings", error);
+        }
+    };
+
+    useEffect(() => {
+
+        fetchBookings();
+
+        // ✅ Polling every 5 seconds
+        const interval = setInterval(fetchBookings, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+
+    return (
     <div className="min-h-screen bg-background">
       <Header />
 
@@ -232,7 +177,7 @@ export default function AdminPage() {
         <div className="bg-card rounded-t-lg border-x border-t border-border">
           <div className="flex items-center gap-2 px-6 py-3 border-b border-border overflow-x-auto">
             {[
-              { id: "requests", label: "Customer Requests", icon: Users },
+              { id: "requests", label: "Consultation Bookings", icon: Users },
               { id: "vehicles", label: "Vehicle Management", icon: Car },
               { id: "videos", label: "Video Reviews", icon: Video},
               { id: "newsletter", label: "Newsletter", icon: Mail },
@@ -260,7 +205,7 @@ export default function AdminPage() {
           {activeTab === "requests" && (
             <div>
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
-                <h2 className="text-2xl font-bold">Customer Requests</h2>
+                <h2 className="text-2xl font-bold">Consultation Bookings</h2>
                 <div className="flex items-center gap-3 w-full md:w-auto">
                   <div className="relative flex-1 md:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
@@ -279,86 +224,33 @@ export default function AdminPage() {
 
               <div className="overflow-x-auto">
                 <table className="w-full">
+
                   <thead>
                     <tr className="border-b border-border">
                       <th className="px-4 py-3 text-left font-semibold text-sm">Customer</th>
-                      <th className="px-4 py-3 text-left font-semibold text-sm">Contact</th>
-                      <th className="px-4 py-3 text-left font-semibold text-sm">Type</th>
-                      <th className="px-4 py-3 text-left font-semibold text-sm">Vehicle/Branch</th>
-                      <th className="px-4 py-3 text-left font-semibold text-sm">Date & Time</th>
+                      <th className="px-4 py-3 text-left font-semibold text-sm">Contact Details</th>
+                      <th className="px-4 py-3 text-left font-semibold text-sm">Booking Type</th>
+                      <th className="px-4 py-3 text-left font-semibold text-sm">Vehicle Details</th>
+                      <th className="px-4 py-3 text-left font-semibold text-sm">Date</th>
+                      <th className="px-4 py-3 text-left font-semibold text-sm">Time</th>
                       <th className="px-4 py-3 text-left font-semibold text-sm">Status</th>
-                      <th className="px-4 py-3 text-left font-semibold text-sm">Actions</th>
                     </tr>
                   </thead>
-                  <tbody>
+
+                    <tbody>
                     {recentRequests.map((request) => (
-                      <tr key={request.id} className="border-b border-border hover:bg-secondary/30 transition">
-                        <td className="px-4 py-4">
-                          <div>
-                            <p className="font-medium">{request.customer}</p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="text-sm">
-                            <p className="text-muted-foreground">{request.email}</p>
-                            <p className="text-muted-foreground">{request.phone}</p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-4">
-                          <span className="text-sm font-medium">{request.type}</span>
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="text-sm">
-                            <p>{request.vehicle}</p>
-                            {request.branch !== "-" && (
-                              <p className="text-muted-foreground text-xs">{request.branch}</p>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="text-sm">
-                            <p>{request.date}</p>
-                            <p className="text-muted-foreground text-xs">{request.time}</p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-4">
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 ${
-                              request.status === "Pending"
-                                ? "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400"
-                                : request.status === "Confirmed"
-                                ? "bg-green-500/20 text-green-700 dark:text-green-400"
-                                : "bg-red-500/20 text-red-700 dark:text-red-400"
-                            }`}
-                          >
-                            {request.status === "Confirmed" && <CheckCircle size={12} />}
-                            {request.status === "Cancelled" && <XCircle size={12} />}
-                            {request.status === "Pending" && <Clock size={12} />}
-                            {request.status}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="flex items-center gap-2">
-                            {request.status === "Pending" && (
-                              <>
-                                <Button size="sm" variant="outline" className="text-xs">
-                                  <CheckCircle size={14} className="mr-1" />
-                                  Confirm
-                                </Button>
-                                <Button size="sm" variant="outline" className="text-xs">
-                                  <XCircle size={14} className="mr-1" />
-                                  Decline
-                                </Button>
-                              </>
-                            )}
-                            <Button size="sm" variant="ghost">
-                              <Eye size={14} />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
+                        <tr key={request.id}>
+                            <td>{request.fullName}</td>
+                            <td>{request.email}</td>
+                            <td>{request.consultationType}</td>
+                            <td>{request.vehicleType}</td>
+                            <td>{request.preferredDate}</td>
+                            <td>{request.preferredTime}</td>
+                            <td>{request.status}</td>
+                        </tr>
                     ))}
-                  </tbody>
+                    </tbody>
+
                 </table>
               </div>
             </div>

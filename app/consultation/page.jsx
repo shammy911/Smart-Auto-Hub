@@ -8,8 +8,10 @@ import { Calendar, Clock, User, MapPin, MessageSquare, AlertCircle, Loader2 } fr
 import ChatBot from "@/components/ChatBot"
 import { resolve } from "path"
 // import { setTimeout } from "timers/promises"
+import {handleConsultationRequests} from "../APITriggers/handleConsultationRequests";
 
 export default function ConsultationPage() {
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -92,51 +94,68 @@ export default function ConsultationPage() {
     setErrors((prev) => ({ ...prev, [name]: error}))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+    const handleSubmit = async (e) => {
 
-    const newErrors = {}
-    Object.keys(formData).forEach((key) => {
-      if(key !== "message") {
-        //message is optional
-        const error = validateFeild(key, formData[key])
-        if(error) newErrors[key] = error
-      }
-    })
+        e.preventDefault();
 
-    const allTouched = Object.keys(formData).reduce((acc, key) => ({...acc, [key]: true}), {})
-    setTouched(allTouched)
+        const newErrors = {};
+        Object.keys(formData).forEach((key) => {
+            if (key !== "message") {
+                const error = validateFeild(key, formData[key]);
+                if (error) newErrors[key] = error;
+            }
+        });
 
-    if(Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
+        const allTouched = Object.keys(formData).reduce(
+            (acc, key) => ({ ...acc, [key]: true }),
+            {}
+        );
+        setTouched(allTouched);
 
-    setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
 
-    setIsSubmitting(false)
-    setSubmitted(true)
+        try {
+
+            setIsSubmitting(true);
+
+            await handleConsultationRequests(formData); // ✅ THIS IS CORRECT
+
+            alert("✅ Booking submitted successfully!");
+
+            setSubmitted(true);
+
+        } catch (error) {
+
+            console.error(error);
+            alert("Booking failed. Please try again.");
+
+        } finally {
+
+            setIsSubmitting(false);
+        }
+
+        setTimeout(() => {
+            setFormData({
+                fullName: "",
+                email: "",
+                phone: "",
+                vehicleType: "",
+                consultationType: "",
+                preferredDate: "",
+                preferredTime: "",
+                message: "",
+            });
+            setErrors({});
+            setTouched({});
+            setSubmitted(false);
+        }, 3000);
+    };
 
 
-    setTimeout(() => {
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        vehicleType: "",
-        consultationType: "",
-        preferredDate: "",
-        preferredTime: "",
-        message: "",
-      })
-      setErrors({})
-      setTouched({})
-      setSubmitted(false)
-    }, 3000)
-  }
-
-  const getInputClassName = (fieldName, baseClassName) => {
+    const getInputClassName = (fieldName, baseClassName) => {
     if(errors[fieldName] && touched[fieldName]) {
       return `${baseClassName} border-red-500 focus:ring-red-500`
     }
