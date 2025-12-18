@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Phone, Mail, MapPin, Clock, Send, MessageSquare, Building, AlertCircle, Loader2 } from 'lucide-react'
 import ChatBot from "@/components/ChatBot"
  
+
+
+
+
+
+// Contact Page
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
