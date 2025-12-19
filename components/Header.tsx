@@ -30,7 +30,7 @@ export function Header() {
 
     // ✅ Dynamic role check (from NextAuth session)
     const isAdmin = user?.role === "admin";
-    //const isAdmin = useState(true)
+    // const isAdmin = useState(true)
 
     const getInitials = (name: string) =>
         name
@@ -139,12 +139,23 @@ export function Header() {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <button className="flex items-center gap-2 hover:opacity-80 transition">
-                                        <Avatar className="h-10 w-10 border-2 border-primary">
-                                            <AvatarImage src={user.image || ""} />
-                                            <AvatarFallback className="bg-primary text-primary-foreground">
-                                                {getInitials(user.name || "U")}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                            <div className="relative flex items-center justify-center">
+                                                {/* RING */}
+                                                <span
+                                                    className={`
+                                                    absolute inset-0 avatar-ring
+                                                    ${isAdmin ? "avatar-ring-admin" : "avatar-ring-user"}
+                                                    `}
+                                                />
+
+                                                {/* AVATAR */}
+                                                <Avatar className="relative z-10 h-10 w-10 bg-background">
+                                                    <AvatarImage src={user.image || ""} />
+                                                    <AvatarFallback className="bg-primary text-primary-foreground">
+                                                    {getInitials(user.name || "U")}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                        </div>
 
                                         <div className="text-left">
                                             <p className="text-sm font-medium text-foreground">{user.name}</p>
@@ -232,12 +243,22 @@ export function Header() {
                                 <div className="border-t border-border my-4" />
 
                                 <div className="flex items-center gap-2 py-2">
-                                    <Avatar className="h-8 w-8 border-2 border-primary">
-                                        <AvatarImage src={user.image || ""} />
-                                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                                   <div className="relative flex items-center justify-center">
+                                        <span
+                                            className={`
+                                            absolute inset-0 avatar-ring
+                                            ${isAdmin ? "avatar-ring-admin" : "avatar-ring-user"}
+                                            `}
+                                            style={{ filter: "blur(6px)" }}
+                                        />
+
+                                        <Avatar className="relative z-10 h-8 w-8 bg-background">
+                                            <AvatarImage src={user.image || ""} />
+                                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                                             {getInitials(user.name || "U")}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </div>
                                     <span className="font-medium text-foreground">
                                         {user.name}
                                         {isAdmin && (

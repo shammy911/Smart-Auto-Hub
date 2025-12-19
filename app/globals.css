@@ -155,3 +155,46 @@
   0%,100% { opacity: 0.7; filter: blur(6px); }
   50% { opacity: 1; filter: blur(10px); }
 }
+
+/* ================================
+   ROLE-BASED AVATAR RINGS
+   ================================ */
+
+/* ---------- USER RING ---------- */
+@utility avatar-ring-user {
+  background: linear-gradient(135deg, #38bdf8, #22d3ee);
+  animation: avatar-pulse 2.5s ease-in-out infinite;
+}
+
+/* ---------- ADMIN RING ---------- */
+@utility avatar-ring-admin {
+  background: linear-gradient(135deg, #facc15, #f97316, #ef4444);
+  animation: avatar-spin 5s linear infinite;
+}
+
+/* ---------- SHARED ---------- */
+@utility avatar-ring {
+  border-radius: 9999px;
+  filter: blur(10px);
+}
+
+/* ---------- KEYFRAMES ---------- */
+@keyframes avatar-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes avatar-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
