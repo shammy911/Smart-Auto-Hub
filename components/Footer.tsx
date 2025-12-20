@@ -53,13 +53,13 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Follow Us</h4>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-primary transition" aria-label="Facebook">
+              <a href="https://www.facebook.com/sameeraautotraderslk" className="hover:text-primary transition" aria-label="Facebook">
                 <Facebook size={20} />
               </a>
               <a href="#" className="hover:text-primary transition" aria-label="Twitter">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="hover:text-primary transition" aria-label="LinkedIn">
+              <a href="https://www.instagram.com/sameeraautotraders?igsh=MTZtYTM4eTVvdHFsMQ==" className="hover:text-primary transition" aria-label="LinkedIn">
                 <Instagram size={20} />
               </a>
             </div>
