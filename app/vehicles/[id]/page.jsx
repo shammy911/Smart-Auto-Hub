@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
-import { Star, ChevronLeft, MessageSquare, Loader2, Heart } from 'lucide-react'
+import { Star, ChevronLeft, MessageSquare, Loader2, Heart, X, ChevronRight, ArrowLeft } from 'lucide-react'
 import ChatBot from "@/components/ChatBot"
 import { vehicleAPI } from "../../../lib/api/vehicles"
 import { localStorageAPI } from "@/lib/storage/localStorage.js"
@@ -18,6 +18,8 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const [monthlyPayment, setMonthlyPayment] = useState(0)
   //const [loanAmount, setLoanAmount] = useState(vehicle.price)
@@ -26,6 +28,14 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
   const [loanTerm, setLoanTerm] = useState(5)
 
   const [isFavourite, setIsFavourite] = useState(false)
+
+  // Mock images array for gallery - in production, this would come from vehicle data
+  const vehicleImages = [
+    vehicle?.image || "/placeholder.svg",
+    "/vehicle-angle-.jpg?height=400&width=600&query=vehicle front angle",
+    "/vehicle-angle-.jpg?height=400&width=600&query=vehicle side angle",
+    "/vehicle-angle-.jpg?height=400&width=600&query=vehicle interior",
+  ]
 
   useEffect(() => {
     const fetchVehicle = async () => {
@@ -36,6 +46,7 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
         setVehicle(result.data)
         setLoanAmount(result.data.price)
 
+        // Track recently viewed vehicles in localStorage
         localStorageAPI.addRecentlyViewed(params.id)
         setIsFavourite(localStorageAPI.isFavourite(params.id))
       } else {
@@ -67,6 +78,38 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
       setIsFavourite(true)
     }
   }
+
+  const openLightbox = (index) => {
+    setCurrentImageIndex(index)
+    setLightboxOpen(true)
+    // Prevent body scroll when lightbox is open
+    document.body.style.overflow = "hidden"
+  }
+
+  const closeLightbox = () => {
+    setLightboxOpen(false)
+    document.body.style.overflow = "unset"
+  }
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % vehicleImages.length)
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + vehicleImages.length) % vehicleImages.length)
+  }
+
+  // Close lightbox on Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && lightboxOpen) {
+        closeLightbox()
+      }
+    }
+    window.addEventListener("keydown", handleEscape)
+    return () => window.removeEventListener("keydown", handleEscape)
+  }, [lightboxOpen])
+
 
   if (loading) {
     return (
@@ -102,10 +145,53 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
     <div className="min-h-screen bg-background">
       <Header />
 
+      {lightboxOpen && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+          {/* Close button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition p-2 rounded-full bg-black/50 hover:bg-black/70"
+            aria-label="Close lightbox"
+          >
+            <X size={32} />
+          </button>
+
+          {/* Previous button */}
+          <button
+            onClick={prevImage}
+            className="absolute left-4 text-white hover:text-gray-300 transition p-3 rounded-full bg-black/50 hover:bg-black/70"
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={32} />
+          </button>
+
+          {/* Current image */}
+          <div className="max-w-6xl max-h-[90vh] p-4">
+            <img
+              src={vehicleImages[currentImageIndex] || "/placeholder.svg"}
+              alt={`${vehicle?.name} - Image ${currentImageIndex + 1}`}
+              className="max-w-full max-h-[85vh] object-contain rounded-lg"
+            />
+            <p className="text-white text-center mt-4">
+              {currentImageIndex + 1} / {vehicleImages.length}
+            </p>
+          </div>
+
+          {/* Next button */}
+          <button
+            onClick={nextImage}
+            className="absolute right-4 text-white hover:text-gray-300 transition p-3 rounded-full bg-black/50 hover:bg-black/70"
+            aria-label="Next image"
+          >
+            <ChevronRight size={32} />
+          </button>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <Button variant="ghost" asChild className="mb-6">
           <Link href="/vehicles">
-            <ChevronLeft size={18} className="mr-2" />
+            <ArrowLeft size={18} className="mr-2" />
             Back to Search
           </Link>
         </Button>
@@ -113,20 +199,33 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Left Column - Images */}
           <div className="lg:col-span-1">
-            <div className="bg-muted rounded-lg overflow-hidden mb-4 h-80">
+            <div 
+              className="bg-muted rounded-lg overflow-hidden mb-4 h-80 cursor-pointer group relative"
+              onClick={() => openLightbox(0)}  
+            >
               <img
                 src={vehicle.image || "/placeholder.svg"}
                 alt={vehicle.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
+              {/* Overlay hint on hover */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm font-semibold bg-black/50 px-4 py-2 rounded-lg">
+                  Click to enlarge
+                </span>
+              </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-muted rounded h-20">
+              {vehicleImages.slice(1, 4).map((img, i) => (
+                <div
+                  key={i}
+                  className="bg-muted rounded h-20 cursor-pointer hover:ring-2 hover:ring-primary transition"
+                  onClick={() => openLightbox(i + 1)}
+                >
                   <img
-                    src={`/vehicle-angle-.jpg?height=100&width=100&query=vehicle angle ${i}`}
-                    alt="thumbnail"
-                    className="w-full h-full object-cover rounded cursor-pointer hover:opacity-75 transition"
+                    src={img || "/placeholder.svg"}
+                    alt={`thumbnail ${i + 1}`}
+                    className="w-full h-full object-cover rounded"
                   />
                 </div>
               ))}

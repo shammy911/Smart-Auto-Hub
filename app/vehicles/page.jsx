@@ -6,10 +6,13 @@ import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
-import { Grid3x3, Heart, List, Loader2, MessageSquare } from "lucide-react"
+import { GitCompareArrows, GitCompareArrowsIcon, GitCompareIcon, Grid3x3, Heart, List, Loader2, MessageSquare } from "lucide-react"
 import ChatBot from "@/components/ChatBot"
+import { addToCompare } from "@/components/VehicleCompare"
 import { vehicleAPI } from "../../lib/api/vehicles"
 import { localStorageAPI } from "@/lib/storage/localStorage.js"
+import toast from "react-hot-toast"
+import { VehicleCompare } from "@/components/VehicleCompare"
 
 
 export default function VehiclesPage() {
@@ -136,6 +139,29 @@ export default function VehiclesPage() {
     setViewMode(mode)
     localStorageAPI.setPreference("viewMode", mode)
   }
+
+  const handleAddToCompare = (e, vehicle) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const result = addToCompare(vehicle)
+
+    if(result.success) {
+      toast({
+        title: "Added to Comparison",
+        description: `${vehicle.name} has been added to comparison list.`,
+      })
+      // Force re-render of VehicleCompare component
+      window.dispatchEvent(new Event("storage"))
+    } else {
+      toast({
+        title: "Cannot Add",
+        description: result.message,
+        variant: "destructive",
+      })
+    }
+  }
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -416,6 +442,8 @@ export default function VehiclesPage() {
                         >
                           {vehicle.status}
                         </span>
+
+                        {/* Favorite Button */}
                         <button
                           onClick={(e) => toggleFavourite(e, vehicle.id)}
                           className="absolute top-4 left-4 p-2 rounded-full bg-white/90 hover:bg-white transition-colors backdrop-blur-sm"
@@ -425,6 +453,15 @@ export default function VehiclesPage() {
                               favourites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-gray-600"
                             }`}
                           />
+                        </button>
+
+                        {/* Compare Button */}
+                        <button
+                          onClick={(e) => handleAddToCompare(e, vehicle)}
+                          className="absolute bottom-4 right-4 p-2 rounded-full bg-primary/90 hover:bg-primary text-white transition-colors backdrop-blur-sm"
+                          title="Add to Compare"
+                        >
+                          <GitCompareArrows className="w-5 h-5" />
                         </button>
                       </div>
 
@@ -479,6 +516,9 @@ export default function VehiclesPage() {
           </div>
         </div>
       </div>
+
+      {/* VehicleCompare sticky bar */}
+      <VehicleCompare />      
 
       {/* Chatbot Icon */}
       <ChatBot />
