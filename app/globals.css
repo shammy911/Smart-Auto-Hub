@@ -116,14 +116,61 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+/* Added custom keyframe animations for hero section */
+@keyframes imageReveal {
+  from {
+    filter: blur(10px);
+    opacity: 0;
   }
-  body {
-    @apply bg-background text-foreground;
+  to {
+    filter: blur(0);
+    opacity: 1;
   }
 }
+
+@keyframes kenBurnsZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-image-reveal {
+  animation: imageReveal 1.2s ease-out forwards;
+}
+
+.animate-ken-burns {
+  animation: kenBurnsZoom 4s ease-out forwards;
+}
+
+.animate-slide-up-1 {
+  animation: slideUpFade 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-2 {
+  animation: slideUpFade 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-3 {
+  animation: slideUpFade 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
 
 /* Adding custom animations for AI chatbot icon */
 
@@ -196,5 +243,130 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* ===================
+UI Polish & Animations
+====================== */
+
+/* Smooth Scroll behaviour for entire site */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Shimmer Animation for skeleton loaders */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Fade in from bottom animation for scroll-triggered elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in from sides for alternating content */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale in animation for cards */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Utility classes for scroll animations */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in-left {
+  animation: fadeInLeft 0.6s ease-out forwards;
+}
+
+.fade-in-right {
+  animation: fadeInRight 0.6s ease-out forwards;
+}
+
+.scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+/* Staggered animation delays for multiple elements */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Enhanced hover glow effect for interactive cards */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 10px 40px rgba(255, 59, 48, 0.2);
+  transform: translateY(-4px);
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

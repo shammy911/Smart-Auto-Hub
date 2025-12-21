@@ -9,6 +9,7 @@ import ChatBot from "@/components/ChatBot"
 import { resolve } from "path"
 // import { setTimeout } from "timers/promises"
 import {handleConsultationRequests} from "../APITriggers/handleConsultationRequests";
+import toast from "react-hot-toast";
 
 export default function ConsultationPage() {
 
@@ -94,68 +95,72 @@ export default function ConsultationPage() {
     setErrors((prev) => ({ ...prev, [name]: error}))
   }
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
 
-        e.preventDefault();
+      e.preventDefault();
 
-        const newErrors = {};
-        Object.keys(formData).forEach((key) => {
-            if (key !== "message") {
-                const error = validateFeild(key, formData[key]);
-                if (error) newErrors[key] = error;
-            }
-        });
+      const newErrors = {};
+      Object.keys(formData).forEach((key) => {
+        if (key !== "message") {
+              const error = validateFeild(key, formData[key]);
+              if (error) newErrors[key] = error;
+          }
+      });
 
-        const allTouched = Object.keys(formData).reduce(
-            (acc, key) => ({ ...acc, [key]: true }),
-            {}
-        );
-        setTouched(allTouched);
+      const allTouched = Object.keys(formData).reduce(
+          (acc, key) => ({ ...acc, [key]: true }),
+          {}
+      );
+      setTouched(allTouched);
 
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
+      if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+      }
 
-        try {
+      try {
 
-            setIsSubmitting(true);
+          setIsSubmitting(true);
 
-            await handleConsultationRequests(formData); // ✅ THIS IS CORRECT
+          await handleConsultationRequests(formData); // ✅ THIS IS CORRECT
 
-            alert("✅ Booking submitted successfully!");
+          toast("Booking submitted successfully!", {
+            duration: 4000,
+            icon: "📅",
+          }    
+          );
 
-            setSubmitted(true);
+          setSubmitted(true);
 
-        } catch (error) {
+      } catch (error) {
 
-            console.error(error);
-            alert("Booking failed. Please try again.");
+          console.error(error);
+          alert("Booking failed. Please try again.");
 
-        } finally {
+      } finally {
 
-            setIsSubmitting(false);
-        }
+          setIsSubmitting(false);
+      }
 
-        setTimeout(() => {
-            setFormData({
-                fullName: "",
-                email: "",
-                phone: "",
-                vehicleType: "",
-                consultationType: "",
-                preferredDate: "",
-                preferredTime: "",
-                message: "",
-            });
-            setErrors({});
-            setTouched({});
-            setSubmitted(false);
-        }, 3000);
-    };
+      setTimeout(() => {
+          setFormData({
+              fullName: "",
+              email: "",
+              phone: "",
+              vehicleType: "",
+              consultationType: "",
+              preferredDate: "",
+              preferredTime: "",
+              message: "",
+          });
+          setErrors({});
+          setTouched({});
+          setSubmitted(false);
+      }, 3000);
+  }
 
 
-    const getInputClassName = (fieldName, baseClassName) => {
+  const getInputClassName = (fieldName, baseClassName) => {
     if(errors[fieldName] && touched[fieldName]) {
       return `${baseClassName} border-red-500 focus:ring-red-500`
     }
@@ -409,7 +414,7 @@ export default function ConsultationPage() {
                     onBlur={handleBlur}
                     className={getInputClassName(
                       "preferredTime",
-                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition",
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition",
                     )}
                   >
                     <option value="">Select a time slot</option>
