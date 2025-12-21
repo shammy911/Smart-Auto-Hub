@@ -1,7 +1,7 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import {Analytics} from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/app/providers";
 
@@ -17,7 +17,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Smart AutoHub - Sameera Auto Traders",
-  description: "Find your perfect vehicle at Sameera Auto Traders. Browse our complete inventory, book consultations, and get expert guidance.",
+  description:
+    "Find your perfect vehicle at Sameera Auto Traders. Browse our complete inventory, book consultations, and get expert guidance.",
   icons: {
     icon: [
       {
@@ -44,15 +45,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`font-sans antialiased`}
-      >
+      <body className={`font-sans antialiased`}>
         <Providers>
-            {children}
-            <Analytics />
-            </Providers>
-
-
+          {children}
+          <Analytics />
+        </Providers>
       </body>
     </html>
   );

@@ -1,83 +1,83 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import {useSearchParams} from "next/navigation"
-import Link from "next/link"
-import { Header } from "@/components/Header"
-import { Footer } from "@/components/Footer"
-import { Button } from "@/components/ui/button"
-import { Grid3x3, Heart, List, Loader2, MessageSquare } from "lucide-react"
-import ChatBot from "@/components/ChatBot"
-import { vehicleAPI } from "../../lib/api/vehicles"
-import { localStorageAPI } from "@/lib/storage/localStorage.js"
-
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Grid3x3, Heart, List, Loader2, MessageSquare } from "lucide-react";
+import ChatBot from "@/components/ChatBot";
+import { vehicleAPI } from "../../lib/api/vehicles";
+import { localStorageAPI } from "@/lib/storage/localStorage.js";
 
 export default function VehiclesPage() {
+  const searchParams = useSearchParams();
 
-  const searchParams = useSearchParams()
+  const [vehicles, setVehicles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const vehiclesPerPage = 6;
 
-  const [vehicles, setVehicles] = useState([])
-  const [loading, setLoading] =  useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const vehiclesPerPage = 6
-
-  const [sortBy, setSortBy] = useState("newest")
+  const [sortBy, setSortBy] = useState("newest");
   const [filterStatus, setFilterStatus] = useState({
     Available: true,
     Shipped: true,
     "Not Available": true,
-  })
+  });
   const [filterType, setFilterType] = useState({
     Sedan: true,
     SUV: true,
     Hatchback: true,
     Van: true,
     Hybrid: true,
-  })
+  });
   const [filterTransmission, setFilterTransmission] = useState({
     Automatic: true,
     Manual: true,
-  })
+  });
 
-  const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(30000000)
-  const [minMileage, setMinMileage] = useState(0)
-  const [maxMileage, setMaxMileage] = useState(50000)
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(30000000);
+  const [minMileage, setMinMileage] = useState(0);
+  const [maxMileage, setMaxMileage] = useState(50000);
 
-  const initialSearch = searchParams.get("search") || ""
-  const initialLocation = searchParams.get("location") || "all"
-  const [searchQuery, setSearchQuery] = useState(initialSearch)
-  const [locationFilter, setLocationFilter] = useState(initialLocation)
+  const initialSearch = searchParams.get("search") || "";
+  const initialLocation = searchParams.get("location") || "all";
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [locationFilter, setLocationFilter] = useState(initialLocation);
 
-  const [favourites, setFavourites] = useState([])
+  const [favourites, setFavourites] = useState([]);
 
-  const [viewMode, setViewMode] = useState("grid")
+  const [viewMode, setViewMode] = useState("grid");
 
   useEffect(() => {
     const fetchVehicles = async () => {
-      setLoading(true)
+      setLoading(true);
 
       const filters = {
         search: searchQuery,
         location: locationFilter,
         status: Object.keys(filterStatus).filter((key) => filterStatus[key]),
         type: Object.keys(filterType).filter((key) => filterType[key]),
-        transmission: Object.keys(filterTransmission).filter((key) => filterTransmission[key]),
+        transmission: Object.keys(filterTransmission).filter(
+          (key) => filterTransmission[key]
+        ),
         minPrice,
         maxPrice,
         minMileage,
         maxMileage,
         sortBy,
-      }
+      };
 
-      const result = await vehicleAPI.searchVehicles(filters)
+      const result = await vehicleAPI.searchVehicles(filters);
       if (result.success) {
-        setVehicles(result.data)
+        setVehicles(result.data);
       }
-      setLoading(false)
-    }
+      setLoading(false);
+    };
 
-    fetchVehicles()
+    fetchVehicles();
   }, [
     searchQuery,
     locationFilter,
@@ -89,60 +89,66 @@ export default function VehiclesPage() {
     minMileage,
     maxMileage,
     sortBy,
-  ])
+  ]);
 
   useEffect(() => {
-    setFavourites(localStorageAPI.getFavourites())
-    const prefs = localStorageAPI.getPreferences()
-    setViewMode(prefs.viewMode || "grid")
-  }, [])
+    setFavourites(localStorageAPI.getFavourites());
+    const prefs = localStorageAPI.getPreferences();
+    setViewMode(prefs.viewMode || "grid");
+  }, []);
 
-  const totalPages = Math.ceil(vehicles.length / vehiclesPerPage)
-  const startIndex = (currentPage - 1) * vehiclesPerPage
-  const endIndex = startIndex + vehiclesPerPage
-  const currentVehicles = vehicles.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(vehicles.length / vehiclesPerPage);
+  const startIndex = (currentPage - 1) * vehiclesPerPage;
+  const endIndex = startIndex + vehiclesPerPage;
+  const currentVehicles = vehicles.slice(startIndex, endIndex);
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [vehicles.length])
+    setCurrentPage(1);
+  }, [vehicles.length]);
 
   const handleResetFilters = () => {
-    setSearchQuery("")
-    setLocationFilter("all")
-    setFilterStatus({ Available: true, Shipped: true, "Not Available": true })
-    setFilterType({ Sedan: true, SUV: true, Hatchback: true, Van: true, Hybrid: true })
-    setFilterTransmission({ Automatic: true, Manual: true })
-    setMinPrice(0)
-    setMaxPrice(30000000)
-    setMinMileage(0)
-    setMaxMileage(50000)
-    setSortBy("newest")
-  }
+    setSearchQuery("");
+    setLocationFilter("all");
+    setFilterStatus({ Available: true, Shipped: true, "Not Available": true });
+    setFilterType({
+      Sedan: true,
+      SUV: true,
+      Hatchback: true,
+      Van: true,
+      Hybrid: true,
+    });
+    setFilterTransmission({ Automatic: true, Manual: true });
+    setMinPrice(0);
+    setMaxPrice(30000000);
+    setMinMileage(0);
+    setMaxMileage(50000);
+    setSortBy("newest");
+  };
 
   const toggleFavourite = (e, vehicleId) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
     if (localStorageAPI.isFavourite(vehicleId)) {
-      const updated = localStorageAPI.removeFavourite(vehicleId)
-      setFavourites(updated)
+      const updated = localStorageAPI.removeFavourite(vehicleId);
+      setFavourites(updated);
     } else {
-      const updated = localStorageAPI.addFavourite(vehicleId)
-      setFavourites(updated)
+      const updated = localStorageAPI.addFavourite(vehicleId);
+      setFavourites(updated);
     }
-  }
+  };
 
   const toggleViewMode = (mode) => {
-    setViewMode(mode)
-    localStorageAPI.setPreference("viewMode", mode)
-  }
+    setViewMode(mode);
+    localStorageAPI.setPreference("viewMode", mode);
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <section
-        className="relative h-96 bg-gradient-to-r from-primary via-primary/90 to-secondary text-primary-foreground flex items-center mb-24"
+        className="relative h-96 bg-linear-to-r from-primary via-primary/90 to-secondary text-primary-foreground flex items-center mb-24"
         style={{
           backgroundImage:
             "url(/placeholder.svg?height=384&width=1600&query=modern car showroom inventory luxury vehicles)",
@@ -150,11 +156,14 @@ export default function VehiclesPage() {
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/40 to-black/60"></div>
         <div className="relative max-w-7xl mx-auto px-4 w-full">
-          <h1 className="text-6xl font-bold mb-4 text-balance">Find Your Perfect Car</h1>
+          <h1 className="text-6xl font-bold mb-4 text-balance">
+            Find Your Perfect Car
+          </h1>
           <p className="text-xl opacity-90 text-balance max-w-2xl">
-            Browse our extensive inventory of quality vehicles. From sedans to SUVs, we have something for everyone.
+            Browse our extensive inventory of quality vehicles. From sedans to
+            SUVs, we have something for everyone.
           </p>
         </div>
       </section>
@@ -166,12 +175,14 @@ export default function VehiclesPage() {
           {/* Filters Panel */}
           <div className="lg:col-span-1">
             {/* <div className="bg-card rounded-lg p-6 border border-border sticky top-24"> */}
-            <div className="bg-card rounded-lg p-6 border border-border sticky top-24 shadow-sm hover:shadow-md transition">  
+            <div className="bg-card rounded-lg p-6 border border-border sticky top-24 shadow-sm hover:shadow-md transition">
               <h2 className="font-bold text-xl mb-6">Filters</h2>
 
               {/* Search Input */}
               <div className="mb-6">
-                <label className="text-sm font-semibold mb-2 block">Search</label>
+                <label className="text-sm font-semibold mb-2 block">
+                  Search
+                </label>
                 <input
                   type="text"
                   placeholder="Make, model..."
@@ -183,7 +194,9 @@ export default function VehiclesPage() {
 
               {/* Location Filter */}
               <div className="mb-6">
-                <label className="text-sm font-semibold mb-2 block">Location</label>
+                <label className="text-sm font-semibold mb-2 block">
+                  Location
+                </label>
                 <select
                   value={locationFilter}
                   onChange={(e) => setLocationFilter(e.target.value)}
@@ -273,7 +286,9 @@ export default function VehiclesPage() {
                 <h3 className="font-semibold mb-3 text-sm">Price Range</h3>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-xs text-muted-foreground">Min: LKR {minPrice.toLocaleString()}</label>
+                    <label className="text-xs text-muted-foreground">
+                      Min: LKR {minPrice.toLocaleString()}
+                    </label>
                     <input
                       type="range"
                       min="0"
@@ -285,7 +300,9 @@ export default function VehiclesPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-muted-foreground">Max: LKR {maxPrice.toLocaleString()}</label>
+                    <label className="text-xs text-muted-foreground">
+                      Max: LKR {maxPrice.toLocaleString()}
+                    </label>
                     <input
                       type="range"
                       min="0"
@@ -301,10 +318,14 @@ export default function VehiclesPage() {
 
               {/* Mileage Filter */}
               <div className="mb-6">
-                <h3 className="font-semibold mb-3 text-sm">Mileage Range (km)</h3>
+                <h3 className="font-semibold mb-3 text-sm">
+                  Mileage Range (km)
+                </h3>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-xs text-muted-foreground">Min: {minMileage.toLocaleString()} km</label>
+                    <label className="text-xs text-muted-foreground">
+                      Min: {minMileage.toLocaleString()} km
+                    </label>
                     <input
                       type="range"
                       min="0"
@@ -316,7 +337,9 @@ export default function VehiclesPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-muted-foreground">Max: {maxMileage.toLocaleString()} km</label>
+                    <label className="text-xs text-muted-foreground">
+                      Max: {maxMileage.toLocaleString()} km
+                    </label>
                     <input
                       type="range"
                       min="0"
@@ -330,7 +353,11 @@ export default function VehiclesPage() {
                 </div>
               </div>
 
-              <Button onClick={handleResetFilters} variant="outline" className="w-full bg-transparent">
+              <Button
+                onClick={handleResetFilters}
+                variant="outline"
+                className="w-full bg-transparent"
+              >
                 Reset All Filters
               </Button>
             </div>
@@ -385,20 +412,32 @@ export default function VehiclesPage() {
               </div>
             ) : currentVehicles.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-xl text-muted-foreground mb-4">No vehicles found matching your criteria</p>
+                <p className="text-xl text-muted-foreground mb-4">
+                  No vehicles found matching your criteria
+                </p>
                 <Button onClick={handleResetFilters}>Reset Filters</Button>
               </div>
             ) : (
               <>
-                <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-4"}>
+                <div
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                      : "space-y-4"
+                  }
+                >
                   {currentVehicles.map((vehicle) => (
                     <Link
                       key={vehicle.id}
                       href={`/vehicles/${vehicle.id}`}
-                      className={`bg-card rounded-lg overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group ${viewMode === "list" ? "flex" : ""}`}
+                      className={`bg-card rounded-lg overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group ${
+                        viewMode === "list" ? "flex" : ""
+                      }`}
                     >
                       <div
-                        className={`relative bg-muted overflow-hidden ${viewMode === "grid" ? "h-56" : "w-64 h-48"}`}
+                        className={`relative bg-muted overflow-hidden ${
+                          viewMode === "grid" ? "h-56" : "w-64 h-48"
+                        }`}
                       >
                         <img
                           src={vehicle.image || "/placeholder.svg"}
@@ -410,8 +449,8 @@ export default function VehiclesPage() {
                             vehicle.status === "Available"
                               ? "bg-green-500/90 text-white"
                               : vehicle.status === "Shipped"
-                                ? "bg-yellow-500/90 text-white"
-                                : "bg-red-500/90 text-white"
+                              ? "bg-yellow-500/90 text-white"
+                              : "bg-red-500/90 text-white"
                           }`}
                         >
                           {vehicle.status}
@@ -422,18 +461,25 @@ export default function VehiclesPage() {
                         >
                           <Heart
                             className={`w-5 h-5 ${
-                              favourites.includes(vehicle.id) ? "fill-red-500 text-red-500" : "text-gray-600"
+                              favourites.includes(vehicle.id)
+                                ? "fill-red-500 text-red-500"
+                                : "text-gray-600"
                             }`}
                           />
                         </button>
                       </div>
 
                       <div className="p-5 flex-1">
-                        <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition">{vehicle.name}</h3>
-                        <p className="text-primary font-bold text-xl mb-3">LKR {vehicle.price.toLocaleString()}</p>
+                        <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition">
+                          {vehicle.name}
+                        </h3>
+                        <p className="text-primary font-bold text-xl mb-3">
+                          LKR {vehicle.price.toLocaleString()}
+                        </p>
                         <div className="text-sm text-muted-foreground space-y-1">
                           <p>
-                            {vehicle.location} | {vehicle.transmission} | {vehicle.mileage.toLocaleString()} km
+                            {vehicle.location} | {vehicle.transmission} |{" "}
+                            {vehicle.mileage.toLocaleString()} km
                           </p>
                         </div>
                       </div>
@@ -445,7 +491,9 @@ export default function VehiclesPage() {
                 {totalPages > 1 && (
                   <div className="flex items-center justify-center gap-2 mt-12">
                     <Button
-                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(1, prev - 1))
+                      }
                       disabled={currentPage === 1}
                       variant="outline"
                     >
@@ -464,7 +512,9 @@ export default function VehiclesPage() {
                     ))}
 
                     <Button
-                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                      }
                       disabled={currentPage === totalPages}
                       variant="outline"
                     >
@@ -474,8 +524,6 @@ export default function VehiclesPage() {
                 )}
               </>
             )}
-
-            
           </div>
         </div>
       </div>
@@ -485,5 +533,5 @@ export default function VehiclesPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

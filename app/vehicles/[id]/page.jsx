@@ -1,83 +1,81 @@
-"use client"
+"use client";
 
-import { useState, useEffect, use } from "react"
-import Link from "next/link"
-import { Header } from "@/components/Header"
-import { Footer } from "@/components/Footer"
-import { Button } from "@/components/ui/button"
-import { Star, ChevronLeft, MessageSquare, Loader2, Heart } from 'lucide-react'
-import ChatBot from "@/components/ChatBot"
-import { vehicleAPI } from "../../../lib/api/vehicles"
-import { localStorageAPI } from "@/lib/storage/localStorage.js"
-
+import { useState, useEffect, use } from "react";
+import Link from "next/link";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Star, ChevronLeft, MessageSquare, Loader2, Heart } from "lucide-react";
+import ChatBot from "@/components/ChatBot";
+import { vehicleAPI } from "../../../lib/api/vehicles";
+import { localStorageAPI } from "@/lib/storage/localStorage.js";
 
 export default function VehicleDetailsPage({ params: paramsPromise }) {
-  const params = use(paramsPromise)
+  const params = use(paramsPromise);
   //const vehicle = vehiclesData[params.id] || vehiclesData["1"]
-  const [vehicle, setVehicle] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [vehicle, setVehicle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-
-  const [monthlyPayment, setMonthlyPayment] = useState(0)
+  const [monthlyPayment, setMonthlyPayment] = useState(0);
   //const [loanAmount, setLoanAmount] = useState(vehicle.price)
-  const [loanAmount, setLoanAmount] = useState(0)
-  const [downPayment, setDownPayment] = useState(0)
-  const [loanTerm, setLoanTerm] = useState(5)
+  const [loanAmount, setLoanAmount] = useState(0);
+  const [downPayment, setDownPayment] = useState(0);
+  const [loanTerm, setLoanTerm] = useState(5);
 
-  const [isFavourite, setIsFavourite] = useState(false)
+  const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
     const fetchVehicle = async () => {
-      setLoading(true)
-      const result = await vehicleAPI.getVehicleById(params.id)
+      setLoading(true);
+      const result = await vehicleAPI.getVehicleById(params.id);
 
-      if(result.success) {
-        setVehicle(result.data)
-        setLoanAmount(result.data.price)
+      if (result.success) {
+        setVehicle(result.data);
+        setLoanAmount(result.data.price);
 
-        localStorageAPI.addRecentlyViewed(params.id)
-        setIsFavourite(localStorageAPI.isFavourite(params.id))
+        localStorageAPI.addRecentlyViewed(params.id);
+        setIsFavourite(localStorageAPI.isFavourite(params.id));
       } else {
-        setError(result.error)
+        setError(result.error);
       }
-      setLoading(false)
-    }
+      setLoading(false);
+    };
 
-    fetchVehicle()
-  }, [params.id])
-
+    fetchVehicle();
+  }, [params.id]);
 
   const calculatePayment = () => {
-    const principal = loanAmount - downPayment
-    const monthlyRate = 0.06 / 12
-    const numberOfPayments = loanTerm * 12
+    const principal = loanAmount - downPayment;
+    const monthlyRate = 0.06 / 12;
+    const numberOfPayments = loanTerm * 12;
     const monthlyPaymentCalc =
-      (principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments))) /
-      (Math.pow(1 + monthlyRate, numberOfPayments) - 1)
-    setMonthlyPayment(monthlyPaymentCalc)
-  }
+      (principal *
+        (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments))) /
+      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+    setMonthlyPayment(monthlyPaymentCalc);
+  };
 
   const toggleFavourite = () => {
     if (isFavourite) {
-      localStorageAPI.removeFavourite(params.id)
-      setIsFavourite(false)
+      localStorageAPI.removeFavourite(params.id);
+      setIsFavourite(false);
     } else {
-      localStorageAPI.addFavourite(params.id)
-      setIsFavourite(true)
+      localStorageAPI.addFavourite(params.id);
+      setIsFavourite(true);
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-16 h-16 animate-spin text-primary" /> 
+          <Loader2 className="w-16 h-16 animate-spin text-primary" />
         </div>
         <Footer />
       </div>
-    )
+    );
   }
 
   if (error || !vehicle) {
@@ -95,7 +93,7 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
         </div>
         <Footer />
       </div>
-    )
+    );
   }
 
   return (
@@ -137,7 +135,9 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
           <div className="lg:col-span-2">
             <div className="mb-6">
               <div className="flex items-start justify-between mb-3">
-                <h1 className="text-4xl font-bold">{vehicle?.name || 'Vehicle'}</h1>
+                <h1 className="text-4xl font-bold">
+                  {vehicle?.name || "Vehicle"}
+                </h1>
 
                 <Button
                   variant="outline"
@@ -145,25 +145,33 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
                   onClick={toggleFavourite}
                   className="flex items-center gap-2 bg-transparent"
                 >
-                  <Heart className={`w-5 h-5 ${isFavourite ? "fill-red-500 text-red-500" : ""}`} />
+                  <Heart
+                    className={`w-5 h-5 ${
+                      isFavourite ? "fill-red-500 text-red-500" : ""
+                    }`}
+                  />
                   {isFavourite ? "Saved" : "Save"}
                 </Button>
               </div>
               <div className="flex items-center gap-4 mb-4">
-                <span className="text-3xl font-bold text-primary">LKR {vehicle?.price?.toLocaleString?.() || 'N/A'}</span>
+                <span className="text-3xl font-bold text-primary">
+                  LKR {vehicle?.price?.toLocaleString?.() || "N/A"}
+                </span>
                 <span
                   className={`px-4 py-2 rounded-lg font-semibold ${
                     vehicle?.status === "Available"
                       ? "bg-green-500/20 text-green-700"
-                      : vehicle?.status === "Shipped" 
-                        ? "bg-yellow-500/20 text-yellow-700"
-                        : "bg-red-500/20 text-red-700"
+                      : vehicle?.status === "Shipped"
+                      ? "bg-yellow-500/20 text-yellow-700"
+                      : "bg-red-500/20 text-red-700"
                   }`}
                 >
-                  {vehicle?.status || 'Unknown'}
+                  {vehicle?.status || "Unknown"}
                 </span>
               </div>
-              <p className="text-lg text-muted-foreground">{vehicle?.location || 'N/A'}</p>
+              <p className="text-lg text-muted-foreground">
+                {vehicle?.location || "N/A"}
+              </p>
             </div>
 
             {/* Key Details Table */}
@@ -172,31 +180,38 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Make</p>
-                  <p className="font-semibold">{vehicle?.make || 'N/A'}</p>
+                  <p className="font-semibold">{vehicle?.make || "N/A"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Model</p>
-                  <p className="font-semibold">{vehicle?.model || 'N/A'}</p>
+                  <p className="font-semibold">{vehicle?.model || "N/A"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Year</p>
-                  <p className="font-semibold">{vehicle?.year || 'N/A'}</p>
+                  <p className="font-semibold">{vehicle?.year || "N/A"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Type</p>
-                  <p className="font-semibold">{vehicle?.type || 'N/A'}</p>
+                  <p className="font-semibold">{vehicle?.type || "N/A"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Mileage</p>
-                  <p className="font-semibold">{vehicle?.mileage ? vehicle.mileage.toLocaleString() : 'N/A'} km</p>
+                  <p className="font-semibold">
+                    {vehicle?.mileage
+                      ? vehicle.mileage.toLocaleString()
+                      : "N/A"}{" "}
+                    km
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Transmission</p>
-                  <p className="font-semibold">{vehicle?.transmission || 'N/A'}</p>
+                  <p className="font-semibold">
+                    {vehicle?.transmission || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Fuel Type</p>
-                  <p className="font-semibold">{vehicle?.fuelType || 'N/A'}</p>
+                  <p className="font-semibold">{vehicle?.fuelType || "N/A"}</p>
                 </div>
               </div>
             </div>
@@ -206,7 +221,12 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
               <Button asChild className="flex-1 h-12" size="lg">
                 <Link href="/consultation">Book an Appointment</Link>
               </Button>
-              <Button asChild variant="outline" className="flex-1 h-12 bg-transparent" size="lg">
+              <Button
+                asChild
+                variant="outline"
+                className="flex-1 h-12 bg-transparent"
+                size="lg"
+              >
                 <Link href="/contact">Contact Us</Link>
               </Button>
             </div>
@@ -216,16 +236,22 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
         {/* Description */}
         <div className="bg-card rounded-lg border border-border p-6 mb-12">
           <h3 className="font-bold text-xl mb-4">Description</h3>
-          <p className="text-foreground leading-relaxed">{vehicle?.description || 'No description available'}</p>
+          <p className="text-foreground leading-relaxed">
+            {vehicle?.description || "No description available"}
+          </p>
         </div>
 
         {/* Leasing Calculator */}
-        <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-border p-8 mb-12">
-          <h3 className="font-bold text-2xl mb-6">Estimate Your Monthly Payment</h3>
+        <div className="bg-linear-to-r from-primary/10 to-accent/10 rounded-lg border border-border p-8 mb-12">
+          <h3 className="font-bold text-2xl mb-6">
+            Estimate Your Monthly Payment
+          </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold mb-2">Loan Amount (LKR)</label>
+              <label className="block text-sm font-semibold mb-2">
+                Loan Amount (LKR)
+              </label>
               <input
                 type="number"
                 value={loanAmount}
@@ -235,7 +261,9 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-2">Down Payment (LKR)</label>
+              <label className="block text-sm font-semibold mb-2">
+                Down Payment (LKR)
+              </label>
               <input
                 type="number"
                 value={downPayment}
@@ -245,7 +273,9 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-2">Loan Term (Years)</label>
+              <label className="block text-sm font-semibold mb-2">
+                Loan Term (Years)
+              </label>
               <select
                 value={loanTerm}
                 onChange={(e) => setLoanTerm(Number(e.target.value))}
@@ -268,13 +298,17 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
 
           {monthlyPayment > 0 && (
             <div className="mt-6 p-4 bg-primary/20 rounded-lg border border-primary/30">
-              <p className="text-sm text-muted-foreground mb-1">Estimated Monthly Payment</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Estimated Monthly Payment
+              </p>
               <p className="text-3xl font-bold text-primary">
-                LKR {monthlyPayment.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                LKR{" "}
+                {monthlyPayment.toLocaleString("en-US", {
+                  maximumFractionDigits: 0,
+                })}
               </p>
               <p className="text-xs text-muted-foreground mt-2">
-                Based on 6% annual interset rate.
-                Actual rates may vary.
+                Based on 6% annual interset rate. Actual rates may vary.
               </p>
             </div>
           )}
@@ -282,11 +316,16 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
 
         {/* Similar Vehicles Section */}
         <div className="mb-12">
-          <h3 className="font-bold text-2xl mb-6">Similar Vehicles you might like</h3>
+          <h3 className="font-bold text-2xl mb-6">
+            Similar Vehicles you might like
+          </h3>
           <div className="bg-card rounded-lg border border-border p-6 text-center">
             <p className="text-muted-foreground">
               Check out our{" "}
-              <Link href="/vehicles" className="text-primary font-semibold hover:underline">
+              <Link
+                href="/vehicles"
+                className="text-primary font-semibold hover:underline"
+              >
                 full inventory
               </Link>{" "}
               for more options
@@ -329,5 +368,5 @@ export default function VehicleDetailsPage({ params: paramsPromise }) {
 
       <Footer />
     </div>
-  )
+  );
 }
