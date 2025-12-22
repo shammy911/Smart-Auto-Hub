@@ -6,10 +6,23 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Grid3x3, Heart, List, Loader2, MessageSquare } from "lucide-react";
+import {
+  GitCompareArrows,
+  GitCompareArrowsIcon,
+  GitCompareIcon,
+  Grid3x3,
+  Heart,
+  List,
+  Loader2,
+  MessageSquare,
+} from "lucide-react";
 import ChatBot from "@/components/ChatBot";
+import { addToCompare } from "@/components/VehicleCompare";
 import { vehicleAPI } from "../../lib/api/vehicles";
 import { localStorageAPI } from "@/lib/storage/localStorage.js";
+import toast from "react-hot-toast";
+import { VehicleCompare } from "@/components/VehicleCompare";
+import { VehicleSkeleton } from "@/components/VehicleSkeleton";
 
 export default function VehiclesPage() {
   const searchParams = useSearchParams();
@@ -141,6 +154,21 @@ export default function VehiclesPage() {
   const toggleViewMode = (mode) => {
     setViewMode(mode);
     localStorageAPI.setPreference("viewMode", mode);
+  };
+
+  const handleAddToCompare = (e, vehicle) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const result = addToCompare(vehicle);
+
+    if (result.success) {
+      toast.success(`${vehicle.name} added to comparison`);
+      // Force re-render of VehicleCompare component
+      window.dispatchEvent(new Event("storage"));
+    } else {
+      toast.error(result.message);
+    }
   };
 
   return (
@@ -407,8 +435,11 @@ export default function VehiclesPage() {
 
             {/* Loading State */}
             {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-12 h-12 animate-spin text-primary" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* Render 6 skeleton cards while loading */}
+                {[...Array(6)].map((_, index) => (
+                  <VehicleSkeleton key={index} />
+                ))}
               </div>
             ) : currentVehicles.length === 0 ? (
               <div className="text-center py-20">
@@ -422,68 +453,92 @@ export default function VehiclesPage() {
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                       : "space-y-4"
                   }
                 >
-                  {currentVehicles.map((vehicle) => (
-                    <Link
+                  {currentVehicles.map((vehicle, index) => (
+                    <div
                       key={vehicle.id}
-                      href={`/vehicles/${vehicle.id}`}
-                      className={`bg-card rounded-lg overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group ${
-                        viewMode === "list" ? "flex" : ""
+                      className={`bg-card rounded-xl overflow-hidden border border-border hover:shadow-2xl hover:border-primary/50 transition-all duration-300 group hover-glow fade-in-up delay-${
+                        Math.min(index % 3, 3) * 100
                       }`}
+                      style={{
+                        opacity: 0,
+                        animation: `fadeInUp 0.6s ease-out ${
+                          index * 0.1
+                        }s forwards`,
+                      }}
                     >
-                      <div
-                        className={`relative bg-muted overflow-hidden ${
-                          viewMode === "grid" ? "h-56" : "w-64 h-48"
+                      <Link
+                        key={vehicle.id}
+                        href={`/vehicles/${vehicle.id}`}
+                        className={`block bg-card rounded-lg overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group ${
+                          viewMode === "list" ? "flex" : ""
                         }`}
                       >
-                        <img
-                          src={vehicle.image || "/placeholder.svg"}
-                          alt={vehicle.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <span
-                          className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm ${
-                            vehicle.status === "Available"
-                              ? "bg-green-500/90 text-white"
-                              : vehicle.status === "Shipped"
-                              ? "bg-yellow-500/90 text-white"
-                              : "bg-red-500/90 text-white"
+                        <div
+                          className={`relative bg-muted overflow-hidden ${
+                            viewMode === "grid" ? "h-56" : "w-64 h-48"
                           }`}
                         >
-                          {vehicle.status}
-                        </span>
-                        <button
-                          onClick={(e) => toggleFavourite(e, vehicle.id)}
-                          className="absolute top-4 left-4 p-2 rounded-full bg-white/90 hover:bg-white transition-colors backdrop-blur-sm"
-                        >
-                          <Heart
-                            className={`w-5 h-5 ${
-                              favourites.includes(vehicle.id)
-                                ? "fill-red-500 text-red-500"
-                                : "text-gray-600"
-                            }`}
+                          <img
+                            src={vehicle.image || "/placeholder.svg"}
+                            alt={vehicle.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
-                        </button>
-                      </div>
+                          <span
+                            className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm ${
+                              vehicle.status === "Available"
+                                ? "bg-green-500/90 text-white"
+                                : vehicle.status === "Shipped"
+                                ? "bg-yellow-500/90 text-white"
+                                : "bg-red-500/90 text-white"
+                            }`}
+                          >
+                            {vehicle.status}
+                          </span>
 
-                      <div className="p-5 flex-1">
-                        <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition">
-                          {vehicle.name}
-                        </h3>
-                        <p className="text-primary font-bold text-xl mb-3">
-                          LKR {vehicle.price.toLocaleString()}
-                        </p>
-                        <div className="text-sm text-muted-foreground space-y-1">
-                          <p>
-                            {vehicle.location} | {vehicle.transmission} |{" "}
-                            {vehicle.mileage.toLocaleString()} km
-                          </p>
+                          {/* Favorite Button */}
+                          <button
+                            onClick={(e) => toggleFavourite(e, vehicle.id)}
+                            className="absolute top-4 left-4 p-2 rounded-full bg-white/90 hover:bg-white transition-colors backdrop-blur-sm"
+                          >
+                            <Heart
+                              className={`w-5 h-5 ${
+                                favourites.includes(vehicle.id)
+                                  ? "fill-red-500 text-red-500"
+                                  : "text-gray-600"
+                              }`}
+                            />
+                          </button>
+
+                          {/* Compare Button */}
+                          <button
+                            onClick={(e) => handleAddToCompare(e, vehicle)}
+                            className="absolute bottom-4 right-4 p-2 rounded-full bg-primary/90 hover:bg-primary text-white transition-colors backdrop-blur-sm"
+                            title="Add to Compare"
+                          >
+                            <GitCompareArrows className="w-5 h-5" />
+                          </button>
                         </div>
-                      </div>
-                    </Link>
+
+                        <div className="p-5 flex-1">
+                          <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition">
+                            {vehicle.name}
+                          </h3>
+                          <p className="text-primary font-bold text-xl mb-3">
+                            LKR {vehicle.price.toLocaleString()}
+                          </p>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <p>
+                              {vehicle.location} | {vehicle.transmission} |{" "}
+                              {vehicle.mileage.toLocaleString()} km
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
                   ))}
                 </div>
 
@@ -527,6 +582,9 @@ export default function VehiclesPage() {
           </div>
         </div>
       </div>
+
+      {/* VehicleCompare sticky bar */}
+      <VehicleCompare />
 
       {/* Chatbot Icon */}
       <ChatBot />

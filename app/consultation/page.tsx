@@ -17,6 +17,7 @@ import ChatBot from "@/components/ChatBot";
 import { resolve } from "path";
 // import { setTimeout } from "timers/promises"
 import { handleConsultationRequests } from "../APITriggers/handleConsultationRequests";
+import toast from "react-hot-toast";
 
 export default function ConsultationPage() {
   const [formData, setFormData] = useState({
@@ -120,6 +121,46 @@ export default function ConsultationPage() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      await handleConsultationRequests(formData); // ✅ THIS IS CORRECT
+
+      toast("Booking submitted successfully!", {
+        duration: 4000,
+        icon: "📅",
+      });
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      alert("Booking failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    setTimeout(() => {
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        vehicleType: "",
+        consultationType: "",
+        preferredDate: "",
+        preferredTime: "",
+        message: "",
+      });
+      setErrors({});
+      setTouched({});
+      setSubmitted(false);
+    }, 3000);
+  };
+
+  const getInputClassName = (fieldName, baseClassName) => {
+    if (errors[fieldName] && touched[fieldName]) {
+      return `${baseClassName} border-red-500 focus:ring-red-500`;
     }
 
     try {
@@ -440,7 +481,7 @@ export default function ConsultationPage() {
                     onBlur={handleBlur}
                     className={getInputClassName(
                       "preferredTime",
-                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition"
+                      "w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition"
                     )}
                   >
                     <option value="">Select a time slot</option>
