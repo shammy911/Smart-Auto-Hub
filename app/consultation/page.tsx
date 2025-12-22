@@ -158,7 +158,7 @@ export default function ConsultationPage() {
     }, 3000);
   };
 
-  const getInputClassName = (fieldName, baseClassName) => {
+  const getInputClassName = async (fieldName, baseClassName) => {
     if (errors[fieldName] && touched[fieldName]) {
       return `${baseClassName} border-red-500 focus:ring-red-500`;
     }

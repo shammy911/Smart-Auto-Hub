@@ -28,9 +28,9 @@ export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    // ✅ Dynamic role check (from NextAuth session)
-    const isAdmin = user?.role === "admin";
-    // const isAdmin = useState(true)
+  // ✅ Dynamic role check (from NextAuth session)
+  const isAdmin = user?.role === "admin";
+  // const isAdmin = useState(true)
 
   const getInitials = (name: string) =>
     name
@@ -98,196 +98,226 @@ export function Header() {
           ))}
         </div>
 
-                {/* DESKTOP AUTH */}
-                <div className="hidden md:flex items-center gap-4">
-                    {!user ? (
-                        <>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="hover:opacity-80 transition" title="Open account menu">
-                                        <Avatar className="h-10 w-10 border-2 border-border">
-                                            <AvatarFallback className="bg-muted">
-                                                <User className="h-5 w-5 text-muted-foreground" />
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56">
-                                    <DropdownMenuLabel>Account</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/login" className="cursor-pointer">
-                                            <User className="mr-2 h-4 w-4" />
-                                            <span>Login to See your Dashboard</span>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+        {/* MOBILE TOGGLE */}
+        <button
+          className="md:hidden inline-flex items-center justify-center p-2 rounded-md hover:bg-muted"
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
 
-                            <Button variant="outline" asChild>
-                                <Link href="/login">Login</Link>
-                            </Button>
-                            <Button asChild>
-                                <Link href="/register">Register</Link>
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                        {/* // ---------- LOGGED IN VIEW ---------- */}
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="flex items-center gap-2 hover:opacity-80 transition">
-                                            <div className="relative flex items-center justify-center">
-                                                {/* RING */}
-                                                <span
-                                                    className={`
+        {/* DESKTOP AUTH */}
+        <div className="hidden md:flex items-center gap-4">
+          {!user ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="hover:opacity-80 transition"
+                    title="Open account menu"
+                  >
+                    <Avatar className="h-10 w-10 border-2 border-border">
+                      <AvatarFallback className="bg-muted">
+                        <User className="h-5 w-5 text-muted-foreground" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/login" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Login to See your Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button variant="outline" asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/register">Register</Link>
+              </Button>
+            </>
+          ) : (
+            <>
+              {/* // ---------- LOGGED IN VIEW ---------- */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2 hover:opacity-80 transition">
+                    <div className="relative flex items-center justify-center">
+                      {/* RING */}
+                      <span
+                        className={`
                                                     absolute inset-0 avatar-ring
-                                                    ${isAdmin ? "avatar-ring-admin" : "avatar-ring-user"}
+                                                    ${
+                                                      isAdmin
+                                                        ? "avatar-ring-admin"
+                                                        : "avatar-ring-user"
+                                                    }
                                                     `}
-                                                />
+                      />
 
-                                                {/* AVATAR */}
-                                                <Avatar className="relative z-10 h-10 w-10 bg-background">
-                                                    <AvatarImage src={user.image || ""} />
-                                                    <AvatarFallback className="bg-primary text-primary-foreground">
-                                                    {getInitials(user.name || "U")}
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                        </div>
-
-                                        <div className="text-left">
-                                            <p className="text-sm font-medium text-foreground">{user.name}</p>
-                                            {isAdmin && (
-                                                <p className="text-xs text-muted-foreground">Admin</p>
-                                            )}
-                                        </div>
-                                    </button>
-                                </DropdownMenuTrigger>
-
-                                <DropdownMenuContent align="end" className="w-56">
-                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/dashboard" className="cursor-pointer">
-                                            <LayoutDashboard className="mr-2 h-4 w-4" />
-                                            Dashboard
-                                        </Link>
-                                    </DropdownMenuItem>
-
-                                    {isAdmin && (
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/admin" className="cursor-pointer">
-                                                <Shield className="mr-2 h-4 w-4" />
-                                                Admin Panel
-                                            </Link>
-                                        </DropdownMenuItem>
-                                    )}
-
-                                    <DropdownMenuSeparator />
-
-                                    {/* -------- DESKTOP LOGOUT -------- */}
-                                    <DropdownMenuItem
-                                        className="text-destructive cursor-pointer"
-                                        onClick={() => signOut({ callbackUrl: "/login" })}
-                                    >
-                                        <LogOut className="mr-2 h-4 w-4" />
-                                        Logout
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </>
-                    )}
-                  </div>
-                </button>
-              </DropdownMenuTrigger>
-
-            {/* MOBILE MENU */}
-            {mobileMenuOpen && (
-                <div className="md:hidden bg-card border-t border-border">
-                    <div className="px-4 py-4 space-y-4">
-                        {headerMenuData.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="block text-foreground hover:text-primary"
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                {item.title}
-                            </Link>
-                        ))}
-
-                        {!user ? (
-                            <>
-                                {/* <div className="border-t border-border my-4" /> */}
-                                <div className="flex gap-2 pt-4">
-                                    <Button variant="outline" className="flex-1 bg-transparent" asChild>
-                                        <Link href="/login">Login</Link>
-                                    </Button>
-                                    <Button className="flex-1" asChild>
-                                        <Link href="/register">Register</Link>
-                                    </Button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div className="border-t border-border my-4" />
-
-                                <div className="flex items-center gap-2 py-2">
-                                   <div className="relative flex items-center justify-center">
-                                        <span
-                                            className={`
-                                            absolute inset-0 avatar-ring
-                                            ${isAdmin ? "avatar-ring-admin" : "avatar-ring-user"}
-                                            `}
-                                            style={{ filter: "blur(6px)" }}
-                                        />
-
-                                        <Avatar className="relative z-10 h-8 w-8 bg-background">
-                                            <AvatarImage src={user.image || ""} />
-                                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                                            {getInitials(user.name || "U")}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </div>
-                                    <span className="font-medium text-foreground">
-                                        {user.name}
-                                        {isAdmin && (
-                                            <span className="text-destructive ml-1">(Admin)</span>
-                                        )}
-                                    </span>
-                                </div>
-
-                                <Link 
-                                    href="/dashboard"
-                                    className="flex items-center gap-2 text-foreground hover:text-primary py-2 pl-2"
-                                    >
-                                        <LayoutDashboard className="h-4 w-4" />
-                                        <span>Dashboard</span>
-                                </Link>
-
-                                {isAdmin && (
-                                    <Link 
-                                        href="/admin"
-                                        className="flex items-center gap-2 text-foreground hover:text-primary py-2 pl-2"
-                                        >
-                                            <Shield className="h-4 w-4" />
-                                            <span>Admin Panel</span>
-                                </Link>)}
-                                
-                                {/* -------- MOBILE LOGOUT -------- */}
-                                <button
-                                    onClick={() => signOut({ callbackUrl: "/login" })}
-                                    className="flex items-center gap-2 text-foreground hover:text-destructive py-2 pl-2 w-full text-left"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    <span>Logout</span>
-                                </button>
-                            </>
-                        )}
+                      {/* AVATAR */}
+                      <Avatar className="relative z-10 h-10 w-10 bg-background">
+                        <AvatarImage src={user.image || ""} />
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {getInitials(user.name || "U")}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
+
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-foreground">
+                        {user.name}
+                      </p>
+                      {isAdmin && (
+                        <p className="text-xs text-muted-foreground">Admin</p>
+                      )}
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin" className="cursor-pointer">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Admin Panel
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuSeparator />
+
+                  {/* -------- DESKTOP LOGOUT -------- */}
+                  <DropdownMenuItem
+                    className="text-destructive cursor-pointer"
+                    onClick={() => signOut({ callbackUrl: "/login" })}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
+        </div>
+      </nav>
+
+      {/* MOBILE MENU */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-card border-t border-border">
+          <div className="px-4 py-4 space-y-4">
+            {headerMenuData.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block text-foreground hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.title}
+              </Link>
+            ))}
+
+            {!user ? (
+              <>
+                {/* <div className="border-t border-border my-4" /> */}
+                <div className="flex gap-2 pt-4">
+                  <Button
+                    variant="outline"
+                    className="flex-1 bg-transparent"
+                    asChild
+                  >
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button className="flex-1" asChild>
+                    <Link href="/register">Register</Link>
+                  </Button>
                 </div>
+              </>
+            ) : (
+              <>
+                <div className="border-t border-border my-4" />
+
+                <div className="flex items-center gap-2 py-2">
+                  <div className="relative flex items-center justify-center">
+                    <span
+                      className={`
+                                            absolute inset-0 avatar-ring
+                                            ${
+                                              isAdmin
+                                                ? "avatar-ring-admin"
+                                                : "avatar-ring-user"
+                                            }
+                                            `}
+                      style={{ filter: "blur(6px)" }}
+                    />
+
+                    <Avatar className="relative z-10 h-8 w-8 bg-background">
+                      <AvatarImage src={user.image || ""} />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                        {getInitials(user.name || "U")}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <span className="font-medium text-foreground">
+                    {user.name}
+                    {isAdmin && (
+                      <span className="text-destructive ml-1">(Admin)</span>
+                    )}
+                  </span>
+                </div>
+
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 text-foreground hover:text-primary py-2 pl-2"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Dashboard</span>
+                </Link>
+
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-2 text-foreground hover:text-primary py-2 pl-2"
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>Admin Panel</span>
+                  </Link>
+                )}
+
+                {/* -------- MOBILE LOGOUT -------- */}
+                <button
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="flex items-center gap-2 text-foreground hover:text-destructive py-2 pl-2 w-full text-left"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </>
             )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
