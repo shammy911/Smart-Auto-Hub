@@ -241,7 +241,7 @@ export default function ConsultationPage() {
           {/* Consultation Form */}
           <div className="lg:col-span-2">
             <div className="bg-card rounded-lg p-8 border border-border shadow-sm">
-              <h2 className="text-3xl font-bold mb-6">Schedule Your Consultation</h2>
+              <h2 className="text-3xl font-bold mb-6">Schedule Your Appointment</h2>
 
               {submitted && (
                 <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 animate-in fade-in slide-in-from-top-2 duration-300">
