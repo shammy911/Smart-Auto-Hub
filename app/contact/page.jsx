@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, Clock, Send, MessageSquare, Building, AlertCircle, Loader2 } from 'lucide-react'
+import { Phone, Mail, MapPin, Clock, Send, Building, AlertCircle, Loader2 } from 'lucide-react'
 import ChatBot from "@/components/ChatBot"
  
 
@@ -474,7 +474,7 @@ export default function ContactPage() {
 
               {/* WhatsApp Section */}
               <a 
-                href="htttps://wa.me/94772329595"
+                href="https://wa.me/94772329595"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block bg-card rounded-lg p-6 border border-border hover:border-primary transition group"
@@ -494,7 +494,7 @@ export default function ContactPage() {
                     <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition">
                       Chat with us on WhatsApp
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">Get instant responses to your quaries</p>
+                    <p className="text-sm text-muted-foreground mt-1">Get instant responses to your queries</p>
                   </div>
                 </div>
               </a>

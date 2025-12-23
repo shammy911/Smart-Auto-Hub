@@ -28,10 +28,6 @@ export const metadata: Metadata = {
         url: "/car32x32.png",
         media: "(prefers-color-scheme: dark)",
       },
-      {
-        url: " ",
-        type: "image/svg+xml",
-      },
     ],
     apple: "/car128x128.png",
   },
@@ -45,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <Providers>
             {children}

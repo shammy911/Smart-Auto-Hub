@@ -148,7 +148,7 @@ export default function Home() {
         {/* SHOW LOGGED USER */}
         {session && (
             <div className="text-center py-4 bg-green-100 text-green-700">
-                Welcome, <b>{session.user?.name || session.user?.email}</b> 👋
+                Welcome, <b>{session.user?.name || session.user?.email}</b>
             </div>
         )}
 
@@ -169,7 +169,7 @@ export default function Home() {
               Find Your Next Vehicle at Sameera Auto Traders
             </h1>
             <p className="text-xl lg:text-2xl mb-8 opacity-95 text-balance leading-relaxed">
-              Browse, book, and consult online—our entire inventory at your fingertips.
+              Browse, book, and consult online - our entire inventory at your fingertips.
             </p>
             <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold shadow-lg">
               <Link href="/vehicles">Explore Vehicles</Link>
