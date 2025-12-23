@@ -20,7 +20,7 @@ import ChatBot from "@/components/ChatBot";
 import { addToCompare } from "@/components/VehicleCompare";
 import { vehicleAPI } from "../../lib/api/vehicles";
 import { localStorageAPI } from "@/lib/storage/localStorage.js";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { VehicleCompare } from "@/components/VehicleCompare";
 import { VehicleSkeleton } from "@/components/VehicleSkeleton";
 

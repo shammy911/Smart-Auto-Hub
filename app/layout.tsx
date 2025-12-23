@@ -4,7 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/app/providers";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,34 +46,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
         <Providers>
-          {children}
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+            <Toaster />
+          </ThemeProvider>
           <Analytics />
         </Providers>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: "#333",
-              color: "#fff",
-            },
-            success: {
-              iconTheme: {
-                primary: "#10b981",
-                secondary: "#fff",
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: "#ef4444",
-                secondary: "#fff",
-              },
-            },
-          }}
-        />
       </body>
     </html>
   );

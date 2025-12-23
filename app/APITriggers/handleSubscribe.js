@@ -1,4 +1,6 @@
-import toast from "react-hot-toast";
+"use client";
+
+import { toast } from "sonner";
 
 async function handleSubscribe(email, session, setEmail) {
   if (!email) {

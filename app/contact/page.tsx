@@ -16,7 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import ChatBot from "@/components/ChatBot";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
