@@ -6,7 +6,16 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
-import { Menu, X, User, LayoutDashboard, Shield, LogOut } from "lucide-react";
+import {
+  Menu,
+  X,
+  User,
+  LayoutDashboard,
+  Shield,
+  LogOut,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { headerMenuData } from "@/constants/data";
 
@@ -20,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useTheme } from "next-themes";
 
 export function Header() {
   const { data: session } = useSession();
@@ -27,6 +37,7 @@ export function Header() {
 
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   // ✅ Dynamic role check (from NextAuth session)
   const isAdmin = user?.role === "admin";
@@ -45,7 +56,7 @@ export function Header() {
         {/* LOGO + WORDMARK */}
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/images/Logo.jpg"
+            src="/images/LogoBG_Removed.png"
             alt="Smart AutoHub Logo"
             width={120}
             height={60}
@@ -113,6 +124,17 @@ export function Header() {
 
         {/* DESKTOP AUTH */}
         <div className="hidden md:flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="relative"
+          >
+            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+
           {!user ? (
             <>
               <DropdownMenu>
@@ -253,6 +275,23 @@ export function Header() {
                     <Link href="/register">Register</Link>
                   </Button>
                 </div>
+
+                <button
+                  className="flex items-center gap-2 text-foreground hover:text-primary py-2 w-full text-left"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
+                  {theme === "dark" ? (
+                    <>
+                      <Sun className="h-4 w-4" />
+                      <span>Light Mode</span>
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="h-4 w-4" />
+                      <span>Dark Mode</span>
+                    </>
+                  )}
+                </button>
               </>
             ) : (
               <>
@@ -312,6 +351,23 @@ export function Header() {
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>
+                </button>
+
+                <button
+                  className="flex items-center gap-2 text-foreground hover:text-primary py-2 pl-2 w-full text-left"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
+                  {theme === "dark" ? (
+                    <>
+                      <Sun className="h-4 w-4" />
+                      <span>Light Mode</span>
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="h-4 w-4" />
+                      <span>Dark Mode</span>
+                    </>
+                  )}
                 </button>
               </>
             )}

@@ -20,7 +20,7 @@ import ChatBot from "@/components/ChatBot";
 import { vehicleAPI } from "../../../lib/api/vehicles";
 import { localStorageAPI } from "@/lib/storage/localStorage.js";
 import Email from "next-auth/providers/email";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import StarRating from "@/components/StarRating";
 
 export default function VehicleDetailsPage({ params: paramsPromise }) {

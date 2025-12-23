@@ -17,7 +17,7 @@ import ChatBot from "@/components/ChatBot";
 import { resolve } from "path";
 // import { setTimeout } from "timers/promises"
 import { handleConsultationRequests } from "../APITriggers/handleConsultationRequests";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export default function ConsultationPage() {
   const [formData, setFormData] = useState({
