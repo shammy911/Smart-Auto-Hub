@@ -37,12 +37,33 @@ export function Footer() {
                   href="/consultation"
                   className="hover:text-primary transition"
                 >
-                  Book Consultation
+                  Book an Appointment
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="hover:text-primary transition">
                   About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-primary transition">
+                  FAQ
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/privacy" className="hover:text-primary transition">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-primary transition">
+                  Terms of Service
                 </Link>
               </li>
             </ul>
