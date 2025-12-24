@@ -40,28 +40,32 @@ const stats = [
     label: "Total Vehicles",
     value: "150",
     change: "+12 this month",
-    color: "bg-red-500/10 text-red-600 dark:text-red-400",
+    color:
+      "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300",
     icon: Car,
   },
   {
     label: "Pending Requests",
     value: "23",
     change: "8 appointments, 15 inquiries",
-    color: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+    color:
+      "bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400",
     icon: Clock,
   },
   {
     label: "Newsletter Subscribers",
     value: "1,247",
     change: "+89 this week",
-    color: "bg-green-500/10 text-green-600 dark:text-green-400",
+    color:
+      "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
     icon: Mail,
   },
   {
     label: "Active Branches",
     value: "3",
     change: "Nugegoda, Matara, Colombo",
-    color: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+    color:
+      "bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400",
     icon: MapPin,
   },
 ];
@@ -294,11 +298,11 @@ export default function AdminPage() {
                         <td className="px-4 py-2">
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              request.status === "APPROVED"
-                                ? "bg-green-500/20 text-green-700"
+                              request.status === "ACCEPTED"
+                                ? "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-300"
                                 : request.status === "REJECTED"
-                                ? "bg-red-500/20 text-red-700"
-                                : "bg-yellow-500/20 text-yellow-700"
+                                ? "bg-rose-500/20 text-rose-700 dark:bg-rose-500/30 dark:text-rose-300"
+                                : "bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
                             }`}
                           >
                             {request.status}

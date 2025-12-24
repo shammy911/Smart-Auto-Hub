@@ -130,12 +130,14 @@ export default function DashboardPage() {
               </div>
             </nav>
 
-            <button
+            <Button
+              className="w-full mt-4 bg-transparent"
+              variant="outline"
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="w-full text-left text-destructive"
             >
+              <LogOut size={18} className="mr-2" />
               Logout
-            </button>
+            </Button>
           </div>
 
           {/* Main Content Area */}
@@ -184,8 +186,8 @@ export default function DashboardPage() {
                                 <span
                                   className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 ${
                                     apt.status === "CONFIRMED"
-                                      ? "bg-green-500/20 text-green-700 dark:text-green-400"
-                                      : "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400"
+                                      ? "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-300"
+                                      : "bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
                                   }`}
                                 >
                                   {apt.status}
@@ -260,7 +262,7 @@ export default function DashboardPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="text-red-600 hover:text-red-700"
+                              className="text-red-600 hover:text-red-700 bg-transparent"
                             >
                               <XCircle size={14} className="mr-2" />
                               Cancel
@@ -552,7 +554,7 @@ export default function DashboardPage() {
                     </p>
                     <Button
                       variant="outline"
-                      className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+                      className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950 bg-transparent"
                     >
                       Delete Account
                     </Button>
