@@ -55,12 +55,22 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* LOGO + WORDMARK */}
         <Link href="/" className="flex items-center gap-3">
+          {/* Light mode logo */}
           <Image
-            src="/images/LogoBG_Removed.png"
+            src="/images/LogoBG_Removed-light.png"
             alt="Smart AutoHub Logo"
             width={120}
             height={60}
-            className="object-contain"
+            className="object-contain block dark:hidden"
+            priority
+          />
+          {/* Dark mode logo */}
+          <Image
+            src="/images/LogoBG_Removed-dark1.png"
+            alt="Smart AutoHub Logo"
+            width={120}
+            height={60}
+            className="object-contain hidden dark:block"
             priority
           />
 
@@ -77,8 +87,12 @@ export function Header() {
 
             {/* AutoHub */}
             <span className="text-3xl font-extrabold sm:ml-2">
-              <span className="text-black hover:text-red-700">Auto</span>
-              <span className="text-red-700 hover:text-orange-500">Hub</span>
+              <span className="text-foreground hover:text-red-700 dark:text-backgound transition-colors">
+                Auto
+              </span>
+              <span className="text-red-700 dark:text-orange-400 hover:text-orange-500 transition-colors">
+                Hub
+              </span>
             </span>
           </div>
         </Link>
