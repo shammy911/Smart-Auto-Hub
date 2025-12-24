@@ -24,11 +24,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/car32x32.png",
+        url: "/favicon32x32.png",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/car32x32.png",
+        url: "/favicon32x32.png",
         media: "(prefers-color-scheme: dark)",
       },
       {
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         type: "image/svg+xml",
       },
     ],
-    apple: "/car128x128.png",
+    apple: "/favicon128x128.png",
   },
 };
 

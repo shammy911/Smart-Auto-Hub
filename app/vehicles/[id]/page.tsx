@@ -22,6 +22,7 @@ import { localStorageAPI } from "@/lib/storage/localStorage.js";
 import Email from "next-auth/providers/email";
 import { toast } from "sonner";
 import StarRating from "@/components/StarRating";
+import { notFound } from "next/navigation";
 
 export default function VehicleDetailsPage({ params: paramsPromise }) {
   const params = use(paramsPromise);

@@ -85,7 +85,7 @@ export function Header() {
 
         {/* DESKTOP NAV */}
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-8 ml-3.5 mr-3.5">
           {headerMenuData?.map((item) => (
             <Link
               key={item?.title}

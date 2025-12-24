@@ -14,6 +14,7 @@ import {
   Building,
   AlertCircle,
   Loader2,
+  FileQuestion,
 } from "lucide-react";
 import ChatBot from "@/components/ChatBot";
 import { toast } from "sonner";
@@ -588,6 +589,18 @@ export default function ContactPage() {
                     back to you as soon as possible.
                   </p>
                 </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-border">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full bg-transparent"
+                >
+                  <a href="/faq" className="flex items-center justify-center">
+                    <FileQuestion className="mr-2" size={18} />
+                    View all FAQs
+                  </a>
+                </Button>
               </div>
             </div>
           </div>
