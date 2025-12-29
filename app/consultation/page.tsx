@@ -14,7 +14,6 @@ import {
   Loader2,
 } from "lucide-react";
 import ChatBot from "@/components/ChatBot";
-import { resolve } from "path";
 // import { setTimeout } from "timers/promises"
 import { handleConsultationRequests } from "../APITriggers/handleConsultationRequests";
 import { toast } from "sonner";
@@ -132,43 +131,6 @@ export default function ConsultationPage() {
         duration: 4000,
         icon: "📅",
       });
-
-      setSubmitted(true);
-    } catch (error) {
-      console.error(error);
-      alert("Booking failed. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-
-    setTimeout(() => {
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        vehicleType: "",
-        consultationType: "",
-        preferredDate: "",
-        preferredTime: "",
-        message: "",
-      });
-      setErrors({});
-      setTouched({});
-      setSubmitted(false);
-    }, 3000);
-  };
-
-  const getInputClassName = async (fieldName, baseClassName) => {
-    if (errors[fieldName] && touched[fieldName]) {
-      return `${baseClassName} border-red-500 focus:ring-red-500`;
-    }
-
-    try {
-      setIsSubmitting(true);
-
-      await handleConsultationRequests(formData); // ✅ THIS IS CORRECT
-
-      alert("✅ Booking submitted successfully!");
 
       setSubmitted(true);
     } catch (error) {
