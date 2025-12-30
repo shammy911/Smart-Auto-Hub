@@ -184,6 +184,16 @@ export default function AdminPage() {
     newsletter: 0,
   });
   
+  const loadVehicles = async () => {
+    const result = await vehicleAPI.getAllVehicles();
+    if (result.success) {
+      const sortedVehicles = [...result.data].sort(
+        (a, b) => Number(b.id) - Number(a.id)
+      );
+      setAdminVehicles(sortedVehicles);
+    }
+  };
+
   const fetchBookings = async () => {
     try {
       const res = await fetch("/api/Consultations/getBooking");
@@ -196,21 +206,15 @@ export default function AdminPage() {
 
   useEffect(() => {
     fetchBookings();
+    loadVehicles();
 
     // ✅ Polling every 5 seconds
-    const interval = setInterval(fetchBookings, 5000);
+    const interval = setInterval(() => {
+      fetchBookings();
+      loadVehicles();
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
-  
-  const loadVehicles = async () => {
-    const result = await vehicleAPI.getAllVehicles();
-    if (result.success) {
-      const sortedVehicles = [...result.data].sort(
-        (a, b) => Number(b.id) - Number(a.id)
-      );
-      setAdminVehicles(sortedVehicles);
-    }
-  };
   
   const handleVehicleFieldChange = (field, value) => {
     setVehicleForm((prev) => ({
