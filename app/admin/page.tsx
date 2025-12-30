@@ -84,6 +84,8 @@ const stats = [
 
 const branchOptions = ["Colombo", "Matara", "Nugegoda"];
 const statusOptions = ["Available", "Shipped", "Reserved"];
+const transmissionOptions = ["Automatic", "Manual"];
+const fuelOptions = ["Petrol", "Diesel", "EV", "Hybrid"];
 
 const vehicleFormDefaults = {
   companyName: "",
@@ -96,9 +98,23 @@ const vehicleFormDefaults = {
   branch: "Nugegoda",
   price: "",
   description: "",
-  images: "",
+  images: [],
   status: "Available",
 };
+
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Invalid file data."));
+      }
+    };
+    reader.onerror = () => reject(reader.error || new Error("File read failed."));
+    reader.readAsDataURL(file);
+  });
 
 const recentRequests = [];
 
@@ -176,6 +192,7 @@ export default function AdminPage() {
   const [isSavingVehicle, setIsSavingVehicle] = useState(false);
   const [vehicleForm, setVehicleForm] = useState(vehicleFormDefaults);
   const [vehicleFormError, setVehicleFormError] = useState("");
+  const [selectedImageNames, setSelectedImageNames] = useState([]);
   // Notification counts for each admin tab.
   const [notifications, setNotifications] = useState({
     requests: 0,
@@ -222,6 +239,27 @@ export default function AdminPage() {
       [field]: value,
     }));
   };
+
+  const handleImageFilesChange = async (event) => {
+    const files = Array.from(event.target.files || []);
+
+    if (files.length === 0) {
+      setSelectedImageNames([]);
+      handleVehicleFieldChange("images", []);
+      return;
+    }
+
+    try {
+      const imageData = await Promise.all(files.map(readFileAsDataUrl));
+      setSelectedImageNames(files.map((file) => file.name));
+      handleVehicleFieldChange("images", imageData);
+    } catch (error) {
+      console.error("Failed to read image files", error);
+      setVehicleFormError("Unable to load selected images.");
+      setSelectedImageNames([]);
+      handleVehicleFieldChange("images", []);
+    }
+  };
   
   const handleAddVehicle = async (event) => {
     event.preventDefault();
@@ -245,10 +283,14 @@ export default function AdminPage() {
       return;
     }
 
-    const images = vehicleForm.images
-      .split(/,|\n/)
-      .map((value) => value.trim())
-      .filter(Boolean);
+    const images = Array.isArray(vehicleForm.images)
+      ? vehicleForm.images.filter(
+          (image) => typeof image === "string" && image.trim()
+        )
+      : String(vehicleForm.images || "")
+          .split(/,|\n/)
+          .map((value) => value.trim())
+          .filter(Boolean);
 
     const nameParts = [
       vehicleForm.year,
@@ -278,6 +320,7 @@ export default function AdminPage() {
     if (result.success) {
       await loadVehicles();
       setVehicleForm(vehicleFormDefaults);
+      setSelectedImageNames([]);
       setIsAddVehicleOpen(false);
     } else {
       setVehicleFormError(result.error || "Failed to add vehicle.");
@@ -603,21 +646,39 @@ export default function AdminPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-2">Transmission Type</label>
-                          <Input
+                          <select
                             value={vehicleForm.transmission}
                             onChange={(e) => handleVehicleFieldChange("transmission", e.target.value)}
-                            placeholder="Automatic"
+                            className="w-full px-3 py-2 rounded-md bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                             required
-                          />
+                          >
+                            <option value="" disabled>
+                              Select transmission
+                            </option>
+                            {transmissionOptions.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-2">Fuel Type</label>
-                          <Input
+                          <select
                             value={vehicleForm.fuelType}
                             onChange={(e) => handleVehicleFieldChange("fuelType", e.target.value)}
-                            placeholder="Hybrid"
+                            className="w-full px-3 py-2 rounded-md bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                             required
-                          />
+                          >
+                            <option value="" disabled>
+                              Select fuel type
+                            </option>
+                            {fuelOptions.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-2">Branch</label>
@@ -669,15 +730,17 @@ export default function AdminPage() {
                           />
                         </div>
                         <div className="md:col-span-2">
-                          <label className="block text-sm font-medium mb-2">Images (array)</label>
-                          <Textarea
-                            value={vehicleForm.images}
-                            onChange={(e) => handleVehicleFieldChange("images", e.target.value)}
-                            placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
-                            rows={3}
+                          <label className="block text-sm font-medium mb-2">Images</label>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleImageFilesChange}
                           />
                           <p className="text-xs text-muted-foreground mt-1">
-                            Separate multiple image URLs with commas or new lines.
+                            {selectedImageNames.length > 0
+                              ? `Selected: ${selectedImageNames.join(", ")}`
+                              : "Select one or more images from your device."}
                           </p>
                         </div>
                       </div>
