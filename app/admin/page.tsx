@@ -696,7 +696,7 @@ export default function AdminPage() {
               </div>
 
               {adminVehicles.length === 0 ? (
-                <div className="text-center py-10 text-muted-foreground">No vehicle available yet.</div>
+                <div className="text-center py-10 text-muted-foreground">No vehicles available yet.</div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
                   {adminVehicles.map((vehicle) => (
