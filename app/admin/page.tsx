@@ -227,6 +227,32 @@ const videoReviews = [
   },
 ];
 
+const normalizeValue = (value) => String(value || "").trim().toLowerCase();
+
+const getStatusKey = (status) => {
+  const normalized = normalizeValue(status);
+  if (normalized === "available") return "available";
+  if (normalized === "shipped") return "shipped";
+  if (normalized === "reserved") return "reserved";
+  return "other";
+};
+
+const getStatusBadgeClass = (status) => {
+  switch (normalizeValue(status)) {
+    case "available":
+      return "bg-green-500/20 text-green-700";
+    case "shipped":
+      return "bg-orange-500/20 text-orange-700";
+    case "reserved":
+      return "bg-blue-500/20 text-blue-700";
+    default:
+      return "bg-muted text-muted-foreground";
+  }
+};
+
+const formatVehiclePrice = (price) =>
+  typeof price === "number" ? `LKR ${price.toLocaleString()}` : price || "N/A";
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("requests");
   const [searchQuery, setSearchQuery] = useState("");
@@ -243,6 +269,8 @@ export default function AdminPage() {
   const [vehicleForm, setVehicleForm] = useState(vehicleFormDefaults);
   const [vehicleFormError, setVehicleFormError] = useState("");
   const [selectedImageNames, setSelectedImageNames] = useState([]);
+  const [isBranchDialogOpen, setIsBranchDialogOpen] = useState(false);
+  const [selectedBranchSlug, setSelectedBranchSlug] = useState(null);
   // Notification counts for each admin tab.
   const [notifications, setNotifications] = useState({
     requests: 0,
@@ -451,6 +479,46 @@ export default function AdminPage() {
 
     const notifs = localStorageAPI.getNotifications();
     setNotifications(notifs.admin);
+  };
+
+  const branchInventory = BRANCHES.map((branch) => {
+    const branchName = normalizeValue(branch.name);
+    const branchVehicles = adminVehicles.filter((vehicle) => {
+      const location = normalizeValue(vehicle.location || vehicle.branch);
+      return location === branchName;
+    });
+
+    const counts = branchVehicles.reduce(
+      (acc, vehicle) => {
+        const statusKey = getStatusKey(vehicle.status);
+        if (statusKey === "available") {
+          acc.available += 1;
+        } else if (statusKey === "shipped") {
+          acc.shipped += 1;
+        } else if (statusKey === "reserved") {
+          acc.reserved += 1;
+        } else {
+          acc.other += 1;
+        }
+        acc.total += 1;
+        return acc;
+      },
+      { total: 0, available: 0, shipped: 0, reserved: 0, other: 0 }
+    );
+
+    return {
+      ...branch,
+      ...counts,
+      vehicles: branchVehicles,
+    };
+  });
+
+  const selectedBranch =
+    branchInventory.find((branch) => branch.slug === selectedBranchSlug) || null;
+
+  const handleOpenBranchDetails = (branchSlug) => {
+    setSelectedBranchSlug(branchSlug);
+    setIsBranchDialogOpen(true);
   };
 
   return (
@@ -1091,9 +1159,9 @@ export default function AdminPage() {
               <h2 className="text-2xl font-bold mb-6">Branch-wise Inventory</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {["Nugegoda", "Matara", "Colombo"].map((branch, idx) => (
+                {branchInventory.map((branch) => (
                   <div
-                    key={idx}
+                    key={branch.slug}
                     className="bg-secondary/30 rounded-lg border border-border p-6"
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -1101,7 +1169,7 @@ export default function AdminPage() {
                         <MapPin size={24} className="text-primary" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-xl">{branch}</h3>
+                        <h3 className="font-bold text-xl">{branch.name}</h3>
                         <p className="text-sm text-muted-foreground">Branch</p>
                       </div>
                     </div>
@@ -1111,16 +1179,14 @@ export default function AdminPage() {
                         <span className="text-sm text-muted-foreground">
                           Total Vehicles
                         </span>
-                        <span className="font-bold text-lg">
-                          {45 + idx * 10}
-                        </span>
+                        <span className="font-bold text-lg">{branch.total}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">
                           Available
                         </span>
                         <span className="font-semibold text-green-600">
-                          {30 + idx * 5}
+                          {branch.available}
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
@@ -1128,7 +1194,7 @@ export default function AdminPage() {
                           Shipped
                         </span>
                         <span className="font-semibold text-orange-600">
-                          {10 + idx * 3}
+                          {branch.shipped}
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
@@ -1136,17 +1202,156 @@ export default function AdminPage() {
                           Reserved
                         </span>
                         <span className="font-semibold text-blue-600">
-                          {5 + idx * 2}
+                          {branch.reserved}
                         </span>
                       </div>
                     </div>
 
-                    <Button className="w-full mt-4" variant="outline">
+                    <Button
+                      className="w-full mt-4"
+                      variant="outline"
+                      onClick={() => handleOpenBranchDetails(branch.slug)}
+                    >
                       View Details
                     </Button>
                   </div>
                 ))}
               </div>
+
+              <Dialog
+                open={isBranchDialogOpen}
+                onOpenChange={(open) => {
+                  setIsBranchDialogOpen(open);
+                  if (!open) {
+                    setSelectedBranchSlug(null);
+                  }
+                }}
+              >
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {selectedBranch
+                        ? `${selectedBranch.name} Branch Inventory`
+                        : "Branch Inventory"}
+                    </DialogTitle>
+                  </DialogHeader>
+                  {selectedBranch ? (
+                    <div className="space-y-6">
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} className="text-primary" />
+                          <span>{selectedBranch.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Car size={16} className="text-primary" />
+                          <span>{selectedBranch.total} vehicles total</span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="rounded-lg border border-border bg-secondary/30 p-3">
+                          <p className="text-xs text-muted-foreground">Total</p>
+                          <p className="text-lg font-semibold">
+                            {selectedBranch.total}
+                          </p>
+                        </div>
+                        <div className="rounded-lg border border-border bg-secondary/30 p-3">
+                          <p className="text-xs text-muted-foreground">
+                            Available
+                          </p>
+                          <p className="text-lg font-semibold text-green-600">
+                            {selectedBranch.available}
+                          </p>
+                        </div>
+                        <div className="rounded-lg border border-border bg-secondary/30 p-3">
+                          <p className="text-xs text-muted-foreground">
+                            Shipped
+                          </p>
+                          <p className="text-lg font-semibold text-orange-600">
+                            {selectedBranch.shipped}
+                          </p>
+                        </div>
+                        <div className="rounded-lg border border-border bg-secondary/30 p-3">
+                          <p className="text-xs text-muted-foreground">
+                            Reserved
+                          </p>
+                          <p className="text-lg font-semibold text-blue-600">
+                            {selectedBranch.reserved}
+                          </p>
+                        </div>
+                      </div>
+
+                      {selectedBranch.other > 0 && (
+                        <p className="text-xs text-muted-foreground">
+                          Other status vehicles: {selectedBranch.other}
+                        </p>
+                      )}
+
+                      <div>
+                        <h4 className="text-sm font-semibold mb-3">
+                          Recent Vehicles
+                        </h4>
+                        {selectedBranch.vehicles.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">
+                            No vehicles available for this branch yet.
+                          </p>
+                        ) : (
+                          <div className="space-y-3">
+                            {selectedBranch.vehicles
+                              .slice(0, 5)
+                              .map((vehicle) => (
+                                <div
+                                  key={vehicle.id}
+                                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-border p-3"
+                                >
+                                  <div>
+                                    <p className="font-medium">
+                                      {vehicle.name}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {vehicle.make || "Unknown make"}
+                                      {vehicle.model
+                                        ? ` | ${vehicle.model}`
+                                        : ""}
+                                      {vehicle.year
+                                        ? ` | ${vehicle.year}`
+                                        : ""}
+                                    </p>
+                                  </div>
+                                  <div className="text-sm sm:text-right">
+                                    <p className="font-semibold">
+                                      {formatVehiclePrice(vehicle.price)}
+                                    </p>
+                                    <span
+                                      className={`mt-1 inline-flex px-2 py-0.5 rounded text-xs font-medium ${getStatusBadgeClass(
+                                        vehicle.status
+                                      )}`}
+                                    >
+                                      {vehicle.status || "Unknown"}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Select a branch to view details.
+                    </p>
+                  )}
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsBranchDialogOpen(false)}
+                    >
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           )}
         </div>
