@@ -196,6 +196,7 @@ enum BookingStatus {
   ACCEPTED
   REJECTED
   COMPLETED
+  CANCELLED
 }
 
 enum NewsletterStatus {
