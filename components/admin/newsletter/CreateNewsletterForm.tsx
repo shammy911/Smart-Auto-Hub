@@ -1,12 +1,10 @@
 "use client";
-
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function CreateNewsletterForm() {
-  const router = useRouter();
   const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState("");
+  const [content, setContent] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -14,36 +12,35 @@ export default function CreateNewsletterForm() {
     await fetch("/api/newsletter", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, message }),
+      body: JSON.stringify({ title, subject, content }),
     });
 
-    router.push("/admin/newsletters");
+    setTitle("");
+    setSubject("");
+    setContent("");
+    alert("Newsletter created");
+
+    window.location.href="/admin/newsletters";
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit}>
       <input
-        className="w-full border p-2 rounded"
-        placeholder="Newsletter title"
+        placeholder="Title"
         value={title}
-        onChange={e => setTitle(e.target.value)}
-        required
+        onChange={(e) => setTitle(e.target.value)}
       />
-
+      <input
+        placeholder="Subject"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
+      />
       <textarea
-        className="w-full border p-2 rounded min-h-[200px]"
-        placeholder="Newsletter message (HTML supported)"
-        value={message}
-        onChange={e => setMessage(e.target.value)}
-        required
+        placeholder="HTML Content"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
       />
-
-      <button
-        type="submit"
-        className="px-6 py-2 bg-black text-white rounded"
-      >
-        Save Newsletter
-      </button>
+      <button type="submit">Create</button>
     </form>
   );
 }

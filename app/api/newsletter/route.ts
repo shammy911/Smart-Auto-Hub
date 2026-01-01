@@ -1,24 +1,41 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
-  const { title, message } = await req.json();
+  try {
+    const { title, subject, content } = await req.json();
 
-  const broadcast = await prisma.newsletterBroadcast.create({
-    data: {
-      id: crypto.randomUUID(),
-      title,
-      message,
-    },
-  });
+    if (!title || !subject || !content) {
+      return NextResponse.json(
+        { error: "All fields required" },
+        { status: 400 }
+      );
+    }
 
-  return NextResponse.json(broadcast);
+    const newsletter = await prisma.newsletter.create({
+      data: { title, subject, content },
+    });
+
+    return NextResponse.json(newsletter);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Failed to create newsletter" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function GET() {
-  const broadcasts = await prisma.newsletterBroadcast.findMany({
+  const newsletters = await prisma.newsletter.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      broadcasts: {
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
+    },
   });
 
-  return NextResponse.json(broadcasts);
+  return NextResponse.json(newsletters);
 }
