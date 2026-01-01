@@ -108,14 +108,27 @@ model Review {
 }
 
 model NewsletterEntry {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   userId    String?
-  email     String   @unique
-  message   String?
+  email     String           @unique
+  status    NewsletterStatus @default(ACTIVE)
+  source    NewsletterSource @default(GUEST)
+  createdAt DateTime         @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([email])
+  @@index([status])
+}
+
+model Newsletter {
+  id        String   @id @default(uuid())
+  title     String
+  subject   String
+  content   String // HTML or Markdown
   createdAt DateTime @default(now())
-  source    String   @default("GUEST")
-  status    String   @default("ACTIVE")
-  user      User?    @relation(fields: [userId], references: [id])
+
+  broadcasts NewsletterBroadcast[]
 }
 
 model ConsultationBooking {
@@ -150,11 +163,32 @@ model Session {
 }
 
 model NewsletterBroadcast {
-  id        String    @id
-  title     String
-  message   String
-  sentAt    DateTime?
-  createdAt DateTime  @default(now())
+  id           String          @id @default(uuid())
+  newsletterId String
+  status       BroadcastStatus @default(PENDING)
+  sentCount    Int             @default(0)
+  sentAt       DateTime?
+  createdAt    DateTime        @default(now())
+
+  newsletter Newsletter @relation(fields: [newsletterId], references: [id])
+
+  // ✅ ADD THIS LINE
+  deliveryLogs NewsletterDeliveryLog[]
+
+  @@index([status])
+}
+
+model NewsletterDeliveryLog {
+  id           String         @id @default(uuid())
+  broadcastId  String
+  email        String
+  status       DeliveryStatus
+  errorMessage String?
+  sentAt       DateTime       @default(now())
+
+  broadcast NewsletterBroadcast @relation(fields: [broadcastId], references: [id])
+
+  @@index([email])
 }
 
 enum BookingStatus {
@@ -162,4 +196,27 @@ enum BookingStatus {
   ACCEPTED
   REJECTED
   COMPLETED
+}
+
+enum NewsletterStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+enum NewsletterSource {
+  GUEST
+  USER
+  ADMIN
+}
+
+enum BroadcastStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum DeliveryStatus {
+  SENT
+  FAILED
 }

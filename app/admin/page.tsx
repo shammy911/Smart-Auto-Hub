@@ -176,7 +176,6 @@ export default function AdminPage() {
   const [vehicleForm, setVehicleForm] = useState(vehicleFormDefaults);
   const [vehicleFormError, setVehicleFormError] = useState("");
   
-  const [recentRequests, setRecentRequests] = useState([]);
   const [notifications, setNotifications] = useState({
     requests: 0,
     vehicles: 0,
@@ -282,12 +281,6 @@ export default function AdminPage() {
     setIsSavingVehicle(false);
   };
 
-  const [notifications, setNotifications] = useState({
-    requests: 0,
-    vehicles: 0,
-    videos: 0,
-    newsletter: 0,
-  });
 
   useEffect(() => {
     const notifs = localStorageAPI.getNotifications();
