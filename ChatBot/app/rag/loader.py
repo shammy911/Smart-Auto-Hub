@@ -1,10 +1,13 @@
 from app.database.supabase_client import supabase_client
 
-def load_data(table_name: str):
+def load_cars():
     try:
-        response = supabase_client.from_(table_name).select('*').execute()
+        response = (
+            supabase_client.table("Car")
+            .select("brand, model, price, year, mileage, specifications")
+            .execute()
+        )
         return response.data
     except Exception as e:
-        raise RuntimeError(f"Error loading data from {table_name}: {e}")
-    
-load_data("cars")
+        raise RuntimeError(f"Error loading cars from Supabase: {e}")
+        
