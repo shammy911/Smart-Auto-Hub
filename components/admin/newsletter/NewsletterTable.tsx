@@ -12,7 +12,7 @@ export default function NewsletterTable() {
   }, []);
 
   return (
-    <table>
+    <table className="w-full table-auto border-collapse border border-gray-300">
       <thead>
         <tr>
           <th>Title</th>

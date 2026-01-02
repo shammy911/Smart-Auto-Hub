@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         email,
         userId,
         source: userId
-          ? NewsletterSource.REGISTERED_USER
+          ? NewsletterSource.USER
           : NewsletterSource.GUEST,
       },
     });

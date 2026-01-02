@@ -64,11 +64,18 @@ model Car {
   year           Int
   mileage        Int
   images         String[]
-  specifications Json
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @default(now())
   createdById    String?
   updatedById    String?
+  condition      String?        @default("NULL")
+  edition        String?        @default("NULL")
+  transmission   String?
+  bodyType       String?        @default("NULL")
+  fuelType       String?
+  engineCapacity Int?           @default(0) @db.SmallInt
+  location       String?        @default("NULL")
+  dealer         String?        @default("NULL")
   availability   Availability[]
   createdBy      Admin?         @relation("CreatedBy", fields: [createdById], references: [id])
   updatedBy      Admin?         @relation("UpdatedBy", fields: [updatedById], references: [id])
@@ -111,23 +118,21 @@ model NewsletterEntry {
   id        String           @id @default(uuid())
   userId    String?
   email     String           @unique
-  status    NewsletterStatus @default(ACTIVE)
-  source    NewsletterSource @default(GUEST)
   createdAt DateTime         @default(now())
-
-  user User? @relation(fields: [userId], references: [id])
+  source    NewsletterSource @default(GUEST)
+  status    NewsletterStatus @default(ACTIVE)
+  user      User?            @relation(fields: [userId], references: [id])
 
   @@index([email])
   @@index([status])
 }
 
 model Newsletter {
-  id        String   @id @default(uuid())
-  title     String
-  subject   String
-  content   String // HTML or Markdown
-  createdAt DateTime @default(now())
-
+  id         String                @id @default(uuid())
+  title      String
+  subject    String
+  content    String
+  createdAt  DateTime              @default(now())
   broadcasts NewsletterBroadcast[]
 }
 
@@ -163,30 +168,26 @@ model Session {
 }
 
 model NewsletterBroadcast {
-  id           String          @id @default(uuid())
+  id           String                  @id @default(uuid())
   newsletterId String
-  status       BroadcastStatus @default(PENDING)
-  sentCount    Int             @default(0)
+  status       BroadcastStatus         @default(PENDING)
+  sentCount    Int                     @default(0)
   sentAt       DateTime?
-  createdAt    DateTime        @default(now())
-
-  newsletter Newsletter @relation(fields: [newsletterId], references: [id])
-
-  // ✅ ADD THIS LINE
+  createdAt    DateTime                @default(now())
+  newsletter   Newsletter              @relation(fields: [newsletterId], references: [id])
   deliveryLogs NewsletterDeliveryLog[]
 
   @@index([status])
 }
 
 model NewsletterDeliveryLog {
-  id           String         @id @default(uuid())
+  id           String              @id @default(uuid())
   broadcastId  String
   email        String
   status       DeliveryStatus
   errorMessage String?
-  sentAt       DateTime       @default(now())
-
-  broadcast NewsletterBroadcast @relation(fields: [broadcastId], references: [id])
+  sentAt       DateTime            @default(now())
+  broadcast    NewsletterBroadcast @relation(fields: [broadcastId], references: [id])
 
   @@index([email])
 }

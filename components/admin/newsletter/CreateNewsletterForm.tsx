@@ -24,7 +24,7 @@ export default function CreateNewsletterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <input
         placeholder="Title"
         value={title}
