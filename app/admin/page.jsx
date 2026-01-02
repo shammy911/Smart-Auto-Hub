@@ -107,66 +107,6 @@ const vehicleFormDefaults = {
   status: "Available",
 };
 
-const readFileAsDataUrl = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        resolve(reader.result);
-      } else {
-        reject(new Error("Invalid file data."));
-      }
-    };
-    reader.onerror = () => reject(reader.error || new Error("File read failed."));
-    reader.readAsDataURL(file);
-  });
-
-const loadImageElement = (file) =>
-  new Promise((resolve, reject) => {
-    const objectUrl = URL.createObjectURL(file);
-    const image = new Image();
-    image.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      resolve(image);
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      reject(new Error("Invalid image file."));
-    };
-    image.src = objectUrl;
-  });
-
-const processVehicleImage = async (file) => {
-  const image = await loadImageElement(file);
-  const shouldResize =
-    file.size > MAX_IMAGE_BYTES ||
-    image.width > MAX_IMAGE_DIMENSION ||
-    image.height > MAX_IMAGE_DIMENSION;
-
-  if (!shouldResize) {
-    return readFileAsDataUrl(file);
-  }
-
-  const scale = Math.min(
-    1,
-    MAX_IMAGE_DIMENSION / Math.max(image.width, image.height)
-  );
-  const targetWidth = Math.max(1, Math.round(image.width * scale));
-  const targetHeight = Math.max(1, Math.round(image.height * scale));
-  const canvas = document.createElement("canvas");
-  canvas.width = targetWidth;
-  canvas.height = targetHeight;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Image processing failed.");
-  }
-  context.drawImage(image, 0, 0, targetWidth, targetHeight);
-
-  return canvas.toDataURL("image/jpeg", IMAGE_JPEG_QUALITY);
-};
-
-const recentRequests = [];
-
 const vehicles = [
   {
     id: 1,
@@ -253,6 +193,8 @@ const formatVehiclePrice = (price) =>
   typeof price === "number" ? `LKR ${price.toLocaleString()}` : price || "N/A";
 
 export default function AdminPage() {
+
+
   const [activeTab, setActiveTab] = useState("requests");
   const [searchQuery, setSearchQuery] = useState("");
   const [newVideo, setNewVideo] = useState({
@@ -261,46 +203,20 @@ export default function AdminPage() {
     videoId: "",
   });
 
-  const [recentRequests, setRecentRequests] = useState([]);
-  const [adminVehicles, setAdminVehicles] = useState([]);
-  const [isVehicleDialogOpen, setIsVehicleDialogOpen] = useState(false);
-  const [vehicleDialogMode, setVehicleDialogMode] = useState("add");
-  const [editingVehicle, setEditingVehicle] = useState(null);
+  const [isAddVehicleOpen, setIsAddVehicleOpen] = useState(false);
   const [isSavingVehicle, setIsSavingVehicle] = useState(false);
   const [vehicleForm, setVehicleForm] = useState(vehicleFormDefaults);
   const [vehicleFormError, setVehicleFormError] = useState("");
-  const [selectedImageNames, setSelectedImageNames] = useState([]);
-  const [isViewVehicleOpen, setIsViewVehicleOpen] = useState(false);
-  const [viewVehicle, setViewVehicle] = useState(null);
-  const [isDeleteVehicleOpen, setIsDeleteVehicleOpen] = useState(false);
-  const [vehicleToDelete, setVehicleToDelete] = useState(null);
-  const [deleteVehicleError, setDeleteVehicleError] = useState("");
-  const [isDeletingVehicle, setIsDeletingVehicle] = useState(false);
-  const [isBranchDialogOpen, setIsBranchDialogOpen] = useState(false);
-  const [selectedBranchSlug, setSelectedBranchSlug] = useState(null);
-  // Notification counts for each admin tab.
-  const [notifications, setNotifications] = useState({
-    requests: 0,
-    vehicles: 0,
-    videos: 0,
-    newsletter: 0,
-  });
   
-  const loadVehicles = async () => {
-    const result = await vehicleAPI.getAllVehicles();
-    if (result.success) {
-      const sortedVehicles = [...result.data].sort(
-        (a, b) => Number(b.id) - Number(a.id)
-      );
-      setAdminVehicles(sortedVehicles);
-    }
-  };
+  const [recentRequests, setRecentRequests] = useState([]);
+    const [adminVehicles, setAdminVehicles] = useState([]);
 
-  const fetchBookings = async () => {
+
+    const fetchBookings = async () => {
     try {
       const res = await fetch("/api/Consultations/getBooking");
       const data = await res.json();
-      setRecentRequests(data);
+      setRecentRequests(Array.isArray(data) ? data :data.data || []);
     } catch (error) {
       console.error("Failed to fetch bookings", error);
     }
@@ -835,17 +751,20 @@ export default function AdminPage() {
                         <td>{request.preferredDate}</td>
                         <td>{request.preferredTime}</td>
                         <td className="px-4 py-2">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              request.status === "ACCEPTED"
-                                ? "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-300"
-                                : request.status === "REJECTED"
-                                ? "bg-rose-500/20 text-rose-700 dark:bg-rose-500/30 dark:text-rose-300"
-                                : "bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
-                            }`}
-                          >
-                            {request.status}
-                          </span>
+                         <span
+                             className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                 request.status === "ACCEPTED"
+                                     ? "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-300"
+                                     : request.status === "REJECTED"
+                                         ? "bg-rose-500/20 text-rose-700 dark:bg-rose-500/30 dark:text-rose-300"
+                                         : request.status === "CANCELLED"
+                                             ? "bg-red-500/20 text-red-700 dark:bg-red-500/30 dark:text-red-300"
+                                             : "bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
+                             }`}
+                         >
+  {request.status}
+</span>
+
                         </td>
                         <td className="px-4 py-2 flex gap-2">
                           {request.status === "PENDING" && (
