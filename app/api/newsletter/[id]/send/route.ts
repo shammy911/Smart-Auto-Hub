@@ -9,11 +9,11 @@ const qstash =
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const broadcast = await prisma.newsletterBroadcast.create({
     data: {
-      newsletterId: params.id,
+      newsletterId: (await params).id,
       status: "PENDING",
     },
   });

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   for (const sub of subscribers) {
     try {
       await resend.emails.send({
-        from: "Smart Auto <newsletter@smartauto.com>",
+        from: "Smart Auto <onboarding@resend.dev>",
         to: sub.email,
         subject: broadcast.newsletter.subject,
         html: broadcast.newsletter.content,
