@@ -31,8 +31,8 @@ export default function SendButton({
     <button
       onClick={handleSend}
       disabled={isSending || disabled}
-      className={`px-3 py-1 rounded text-white ${
-        disabled ? "bg-gray-400" : "bg-green-600"
+      className={`px-5 py-1 rounded text-white cursor-pointer ${
+        disabled ? "bg-gray-400" : "bg-red-600"
       }`}
     >
       {disabled ? "Sent" : "Send"}
