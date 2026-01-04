@@ -44,6 +44,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { BRANCHES } from "@/lib/branches";
 import { vehicleAPI } from "@/lib/api/vehicles";
 
@@ -83,7 +93,7 @@ const stats = [
 ];
 
 const branchOptions = ["Colombo", "Matara", "Nugegoda"];
-const statusOptions = ["Available", "Shipped", "Reserved"];
+const statusOptions = ["Available", "Shipped", "Reserved", "Not Available"];
 
 const vehicleFormDefaults = {
   companyName: "",
@@ -172,6 +182,15 @@ export default function AdminPage() {
   const [isSavingVehicle, setIsSavingVehicle] = useState(false);
   const [vehicleForm, setVehicleForm] = useState(vehicleFormDefaults);
   const [vehicleFormError, setVehicleFormError] = useState("");
+  // Added: vehicle action dialog state for view/edit/delete flows.
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [isViewVehicleOpen, setIsViewVehicleOpen] = useState(false);
+  const [isEditVehicleOpen, setIsEditVehicleOpen] = useState(false);
+  const [isDeleteVehicleOpen, setIsDeleteVehicleOpen] = useState(false);
+  const [editVehicleForm, setEditVehicleForm] = useState(vehicleFormDefaults);
+  const [editVehicleError, setEditVehicleError] = useState("");
+  const [isUpdatingVehicle, setIsUpdatingVehicle] = useState(false);
+  const [isDeletingVehicle, setIsDeletingVehicle] = useState(false);
 
   const [recentRequests, setRecentRequests] = useState([]);
   const [adminVehicles, setAdminVehicles] = useState([]);
@@ -213,6 +232,48 @@ export default function AdminPage() {
       ...prev,
       [field]: value,
     }));
+  };
+
+  // Added: map selected vehicle data into editable form fields.
+  const mapVehicleToForm = (vehicle) => ({
+    companyName: vehicle?.make || vehicle?.companyName || "",
+    model: vehicle?.model || "",
+    year: vehicle?.year || "",
+    type: vehicle?.type || "",
+    mileage: vehicle?.mileage ?? "",
+    transmission: vehicle?.transmission || "",
+    fuelType: vehicle?.fuelType || "",
+    branch: vehicle?.location || vehicle?.branch || "Nugegoda",
+    price: vehicle?.price ?? "",
+    description: vehicle?.description || "",
+    images: Array.isArray(vehicle?.images)
+      ? vehicle.images.join(", ")
+      : vehicle?.image || "",
+    status: vehicle?.status || "Available",
+  });
+
+  const handleEditVehicleFieldChange = (field, value) => {
+    setEditVehicleForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleOpenViewVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsViewVehicleOpen(true);
+  };
+
+  const handleOpenEditVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setEditVehicleForm(mapVehicleToForm(vehicle));
+    setEditVehicleError("");
+    setIsEditVehicleOpen(true);
+  };
+
+  const handleOpenDeleteVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsDeleteVehicleOpen(true);
   };
 
   const handleAddVehicle = async (event) => {
@@ -276,6 +337,85 @@ export default function AdminPage() {
     }
 
     setIsSavingVehicle(false);
+  };
+
+  const handleUpdateVehicle = async (event) => {
+    event.preventDefault();
+    if (!selectedVehicle) return;
+    setIsUpdatingVehicle(true);
+    setEditVehicleError("");
+
+    if (
+      !editVehicleForm.companyName.trim() ||
+      !editVehicleForm.model.trim() ||
+      !editVehicleForm.year ||
+      !editVehicleForm.type.trim() ||
+      !editVehicleForm.mileage ||
+      !editVehicleForm.transmission.trim() ||
+      !editVehicleForm.fuelType.trim() ||
+      !editVehicleForm.branch ||
+      !editVehicleForm.price ||
+      !editVehicleForm.status
+    ) {
+      setEditVehicleError("Please fill in all required fields.");
+      setIsUpdatingVehicle(false);
+      return;
+    }
+
+    const images = editVehicleForm.images
+      .split(/,|\n/)
+      .map((value) => value.trim())
+      .filter(Boolean);
+
+    const nameParts = [
+      editVehicleForm.year,
+      editVehicleForm.companyName,
+      editVehicleForm.model,
+    ].filter(Boolean);
+    const vehicleName = nameParts.join(" ");
+
+    const updatedVehicle = {
+      ...selectedVehicle,
+      name: vehicleName,
+      make: editVehicleForm.companyName.trim(),
+      model: editVehicleForm.model.trim(),
+      year: Number(editVehicleForm.year),
+      type: editVehicleForm.type.trim(),
+      mileage: Number(editVehicleForm.mileage),
+      transmission: editVehicleForm.transmission.trim(),
+      fuelType: editVehicleForm.fuelType.trim(),
+      location: editVehicleForm.branch,
+      price: Number(editVehicleForm.price),
+      status: editVehicleForm.status,
+      description: editVehicleForm.description.trim(),
+      images,
+      image:
+        images[0] ||
+        selectedVehicle?.image ||
+        selectedVehicle?.images?.[0] ||
+        "/placeholder.svg",
+    };
+
+    const result = await vehicleAPI.updateVehicle(updatedVehicle);
+    if (result.success) {
+      await loadVehicles();
+      setIsEditVehicleOpen(false);
+      setSelectedVehicle(null);
+    } else {
+      setEditVehicleError(result.error || "Failed to update vehicle.");
+    }
+
+    setIsUpdatingVehicle(false);
+  };
+
+  const handleDeleteVehicle = async () => {
+    if (!selectedVehicle) return;
+    setIsDeletingVehicle(true);
+    await vehicleAPI.deleteVehicle(selectedVehicle.id);
+    await loadVehicles();
+    setIsDeletingVehicle(false);
+    setIsDeleteVehicleOpen(false);
+    setSelectedVehicle(null);
   };
 
   const [notifications, setNotifications] = useState({
@@ -770,6 +910,421 @@ export default function AdminPage() {
                 </Dialog>
               </div>
 
+              {/* Added: vehicle view/edit/delete dialogs */}
+              <Dialog
+                open={isViewVehicleOpen}
+                onOpenChange={(open) => {
+                  setIsViewVehicleOpen(open);
+                  if (!open) {
+                    setSelectedVehicle(null);
+                  }
+                }}
+              >
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <DialogTitle className="text-xl">
+                        {selectedVehicle?.name || "Vehicle Details"}
+                      </DialogTitle>
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${
+                          selectedVehicle?.status === "Available"
+                            ? "bg-green-500/20 text-green-700"
+                            : selectedVehicle?.status === "Shipped"
+                            ? "bg-orange-500/20 text-orange-700"
+                            : selectedVehicle?.status === "Reserved"
+                            ? "bg-blue-500/20 text-blue-700"
+                            : "bg-red-500/20 text-red-700"
+                        }`}
+                      >
+                        {selectedVehicle?.status || "Unknown"}
+                      </span>
+                    </div>
+                  </DialogHeader>
+                  <div className="space-y-6">
+                    <div className="h-60 w-full rounded-lg border border-border bg-secondary/30 overflow-hidden flex items-center justify-center">
+                      {selectedVehicle?.image ||
+                      selectedVehicle?.images?.[0] ? (
+                        <img
+                          src={
+                            selectedVehicle?.image ||
+                            selectedVehicle?.images?.[0]
+                          }
+                          alt={selectedVehicle?.name || "Vehicle"}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <Car size={48} className="text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="sm:col-span-2 rounded-md border border-border p-4 bg-secondary/20">
+                        <p className="text-xs text-muted-foreground">Price</p>
+                        <p className="text-lg font-semibold">
+                          {typeof selectedVehicle?.price === "number"
+                            ? `LKR ${selectedVehicle.price.toLocaleString()}`
+                            : selectedVehicle?.price || "N/A"}
+                        </p>
+                      </div>
+                      <div className="rounded-md border border-border p-4">
+                        <p className="text-xs text-muted-foreground">Branch</p>
+                        <p className="text-sm font-semibold">
+                          {selectedVehicle?.location ||
+                            selectedVehicle?.branch ||
+                            "N/A"}
+                        </p>
+                      </div>
+                      <div className="rounded-md border border-border p-4">
+                        <p className="text-xs text-muted-foreground">Mileage</p>
+                        <p className="text-sm font-semibold">
+                          {selectedVehicle?.mileage ||
+                          selectedVehicle?.mileage === 0
+                            ? `${Number(
+                                selectedVehicle.mileage
+                              ).toLocaleString()} km`
+                            : "N/A"}
+                        </p>
+                      </div>
+                      <div className="rounded-md border border-border p-4">
+                        <p className="text-xs text-muted-foreground">Year</p>
+                        <p className="text-sm font-semibold">
+                          {selectedVehicle?.year || "N/A"}
+                        </p>
+                      </div>
+                      <div className="rounded-md border border-border p-4">
+                        <p className="text-xs text-muted-foreground">
+                          Transmission
+                        </p>
+                        <p className="text-sm font-semibold">
+                          {selectedVehicle?.transmission || "N/A"}
+                        </p>
+                      </div>
+                      <div className="rounded-md border border-border p-4">
+                        <p className="text-xs text-muted-foreground">
+                          Fuel Type
+                        </p>
+                        <p className="text-sm font-semibold">
+                          {selectedVehicle?.fuelType || "N/A"}
+                        </p>
+                      </div>
+                      <div className="rounded-md border border-border p-4">
+                        <p className="text-xs text-muted-foreground">
+                          Body Type
+                        </p>
+                        <p className="text-sm font-semibold">
+                          {selectedVehicle?.type || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Description
+                      </p>
+                      <p className="text-sm leading-relaxed text-foreground">
+                        {selectedVehicle?.description ||
+                          "No description provided."}
+                      </p>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsViewVehicleOpen(false)}
+                    >
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog
+                open={isEditVehicleOpen}
+                onOpenChange={(open) => {
+                  setIsEditVehicleOpen(open);
+                  if (!open) {
+                    setEditVehicleError("");
+                    setSelectedVehicle(null);
+                  }
+                }}
+              >
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>
+                      Edit Vehicle - {selectedVehicle?.name || "Vehicle"}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleUpdateVehicle} className="space-y-4">
+                    <div>
+                      <h3 className="text-sm font-semibold text-muted-foreground">
+                        Vehicle Details
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Company Name
+                        </label>
+                        <Input
+                          value={editVehicleForm.companyName}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "companyName",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g., Toyota"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Vehicle Model
+                        </label>
+                        <Input
+                          value={editVehicleForm.model}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "model",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g., Prius"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Year
+                        </label>
+                        <Input
+                          type="number"
+                          value={editVehicleForm.year}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "year",
+                              e.target.value
+                            )
+                          }
+                          placeholder="2024"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Vehicle Type
+                        </label>
+                        <Input
+                          value={editVehicleForm.type}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "type",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Sedan, SUV..."
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Current Mileage (km)
+                        </label>
+                        <Input
+                          type="number"
+                          value={editVehicleForm.mileage}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "mileage",
+                              e.target.value
+                            )
+                          }
+                          placeholder="25000"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Transmission Type
+                        </label>
+                        <Input
+                          value={editVehicleForm.transmission}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "transmission",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Automatic"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Fuel Type
+                        </label>
+                        <Input
+                          value={editVehicleForm.fuelType}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "fuelType",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Hybrid"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Branch
+                        </label>
+                        <select
+                          value={editVehicleForm.branch}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "branch",
+                              e.target.value
+                            )
+                          }
+                          className="w-full px-3 py-2 rounded-md bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                          required
+                        >
+                          {branchOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Vehicle Price (LKR)
+                        </label>
+                        <Input
+                          type="number"
+                          value={editVehicleForm.price}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "price",
+                              e.target.value
+                            )
+                          }
+                          placeholder="7500000"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Status
+                        </label>
+                        <select
+                          value={editVehicleForm.status}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "status",
+                              e.target.value
+                            )
+                          }
+                          className="w-full px-3 py-2 rounded-md bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                          required
+                        >
+                          {statusOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium mb-2">
+                          Description
+                        </label>
+                        <Textarea
+                          value={editVehicleForm.description}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "description",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Brief description of the vehicle..."
+                          rows={4}
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium mb-2">
+                          Images (array)
+                        </label>
+                        <Textarea
+                          value={editVehicleForm.images}
+                          onChange={(e) =>
+                            handleEditVehicleFieldChange(
+                              "images",
+                              e.target.value
+                            )
+                          }
+                          placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+                          rows={3}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Separate multiple image URLs with commas or new lines.
+                        </p>
+                      </div>
+                    </div>
+                    {editVehicleError && (
+                      <p className="text-sm text-destructive">
+                        {editVehicleError}
+                      </p>
+                    )}
+                    <DialogFooter>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsEditVehicleOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" disabled={isUpdatingVehicle}>
+                        {isUpdatingVehicle ? "Saving..." : "Save Changes"}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+
+              <AlertDialog
+                open={isDeleteVehicleOpen}
+                onOpenChange={(open) => {
+                  setIsDeleteVehicleOpen(open);
+                  if (!open) {
+                    setSelectedVehicle(null);
+                  }
+                }}
+              >
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Vehicle?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to permanently delete{" "}
+                      {selectedVehicle?.name || "this vehicle"}? This action
+                      cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button
+                        variant="destructive"
+                        onClick={handleDeleteVehicle}
+                        disabled={isDeletingVehicle}
+                      >
+                        {isDeletingVehicle ? "Deleting..." : "Delete"}
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
               {adminVehicles.length === 0 ? (
                 <div className="text-center py-10 text-muted-foreground">
                   No vehicles available yet.
@@ -831,13 +1386,28 @@ export default function AdminPage() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="ghost">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleOpenViewVehicle(vehicle)}
+                            aria-label="View vehicle details"
+                          >
                             <Eye size={16} />
                           </Button>
-                          <Button size="sm" variant="ghost">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleOpenEditVehicle(vehicle)}
+                            aria-label="Edit vehicle"
+                          >
                             <Edit size={16} />
                           </Button>
-                          <Button size="sm" variant="ghost">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleOpenDeleteVehicle(vehicle)}
+                            aria-label="Delete vehicle"
+                          >
                             <Trash2 size={16} />
                           </Button>
                         </div>

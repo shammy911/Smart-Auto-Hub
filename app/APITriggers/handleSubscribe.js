@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "sonner";
+import { toast } from "@/services/toast.service";
 
 async function handleSubscribe(email, session, setEmail) {
   if (!email) {

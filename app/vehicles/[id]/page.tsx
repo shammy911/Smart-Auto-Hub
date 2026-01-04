@@ -20,7 +20,7 @@ import ChatBot from "@/components/ChatBot";
 import { vehicleAPI } from "../../../lib/api/vehicles";
 import { localStorageAPI } from "@/lib/storage/localStorage.js";
 import Email from "next-auth/providers/email";
-import { toast } from "sonner";
+import { toast } from "@/services/toast.service";
 import StarRating from "@/components/StarRating";
 import { notFound } from "next/navigation";
 
