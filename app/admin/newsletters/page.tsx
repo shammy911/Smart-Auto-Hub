@@ -8,7 +8,7 @@ export default function NewslettersPage() {
 
         <a
           href="/admin/newsletters/create"
-          className="px-4 py-2 bg-black text-white rounded"
+          className="px-4 py-2 bg-red-600 text-white rounded"
         >
           Create Newsletter
         </a>
