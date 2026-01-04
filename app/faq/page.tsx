@@ -1,7 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import ChatBot from "@/components/ChatBot";
 
 interface FAQItem {
   question: string;
@@ -126,16 +131,16 @@ function FAQAccordion({
   onClick: () => void;
 }) {
   return (
-    <div className="border-b border-slate-200 dark:border-slate-700">
+    <div className="border-b border-border">
       <button
         onClick={onClick}
-        className="w-full flex items-center justify-between py-5 px-6 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+        className="w-full flex items-center justify-between py-5 px-6 text-left hover:bg-muted/60 transition-colors"
       >
-        <span className="font-semibold text-slate-900 dark:text-white pr-4">
+        <span className="font-semibold text-foreground pr-4">
           {item.question}
         </span>
         <ChevronDown
-          className={`w-5 h-5 text-slate-500 flex-shrink-0 transition-transform duration-200 ${
+          className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
         />
@@ -145,7 +150,7 @@ function FAQAccordion({
           isOpen ? "max-h-96" : "max-h-0"
         }`}
       >
-        <p className="px-6 pb-5 text-slate-600 dark:text-slate-400 leading-relaxed">
+        <p className="px-6 pb-5 text-muted-foreground leading-relaxed">
           {item.answer}
         </p>
       </div>
@@ -163,14 +168,25 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-background">
+      <Header />
+
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <section
+        className="relative h-96 bg-linear-to-r from-primary via-primary/90 to-secondary text-primary-foreground flex items-center mb-24"
+        style={{
+          backgroundImage:
+            "url(/placeholder.svg?height=384&width=1600&query=customer support desk inside modern auto showroom)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/40 to-black/60"></div>
+        <div className="relative max-w-7xl mx-auto px-4 w-full">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-balance">
             Frequently Asked Questions
           </h1>
-          <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+          <p className="text-xl opacity-90 text-balance max-w-2xl">
             Find answers to common questions about buying vehicles, warranties,
             and our services
           </p>
@@ -178,20 +194,20 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Content */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section className="max-w-4xl mx-auto px-4 pb-24">
+        <div className="space-y-12">
           {faqData.map((category, categoryIndex) => (
             <div key={categoryIndex}>
               {/* Category Header */}
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                <h2 className="text-2xl font-bold text-foreground mb-2">
                   {category.category}
                 </h2>
-                <div className="h-1 w-16 bg-blue-600 rounded-full" />
+                <div className="h-1 w-16 bg-primary rounded-full" />
               </div>
 
               {/* FAQ Items */}
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
+              <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden">
                 {category.items.map((item, itemIndex) => {
                   const itemId = `${categoryIndex}-${itemIndex}`;
                   return (
@@ -208,31 +224,30 @@ export default function FAQPage() {
           ))}
 
           {/* Contact Section */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-8 text-center mt-12">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+          <div className="bg-linear-to-r from-primary to-accent rounded-lg p-8 text-center text-primary-foreground mt-12">
+            <h3 className="text-xl font-bold mb-2">
               Still have questions?
             </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6">
+            <p className="text-primary-foreground/90 mb-6">
               Can't find the answer you're looking for? Our team is here to
               help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Contact Us
-              </a>
-              <a
-                href="/consultation"
-                className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border-2 border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-              >
-                Book Consultation
-              </a>
+              <Button variant="secondary" asChild>
+                <Link href="/contact">Contact Us</Link>
+              </Button>
+              <Button variant="secondary" asChild>
+                <Link href="/consultation">Book Consultation</Link>
+              </Button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Chatbot Icon */}
+      <ChatBot />
+
+      <Footer />
     </div>
   );
 }
