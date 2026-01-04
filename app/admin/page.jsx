@@ -993,10 +993,15 @@ export default function AdminPage() {
                     Manage your email subscriber list
                   </p>
                 </div>
-                <Button>
-                  <FileText size={18} className="mr-2" />
-                  Export List
-                </Button>
+                <div className="flex gap-3 items-center">
+                  <Button variant="outline" onClick={() => window.location.href="/admin/newsletters"}>
+                      View Newsletters
+                  </Button>
+                  <Button onClick={() => window.open("/api/subscribers/export")}>
+                    <FileText size={18} className="mr-2" />
+                    Export List
+                  </Button>
+                </div>
               </div>
 
               <div>
