@@ -5,7 +5,7 @@ export default function NewslettersPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Newsletters</h1>
+        <h1 className="text-2xl font-semibold text-red-600">Newsletters</h1>
         <div className="flex gap-4 items-center">
           <button
             type="button"

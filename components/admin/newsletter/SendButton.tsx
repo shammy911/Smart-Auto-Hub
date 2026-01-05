@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Check, Send } from "lucide-react";
 
 export default function SendButton({
   id,
@@ -32,10 +33,10 @@ export default function SendButton({
       onClick={handleSend}
       disabled={isSending || disabled}
       className={`px-5 py-1 rounded text-white cursor-pointer ${
-        disabled ? "bg-gray-400" : "bg-red-600"
+        disabled ? "bg-gray-400" : "bg-yellow-600"
       }`}
     >
-      {disabled ? "Sent" : "Send"}
+      {!disabled ? <Send /> : <Check />}
     </button>
   );
 }

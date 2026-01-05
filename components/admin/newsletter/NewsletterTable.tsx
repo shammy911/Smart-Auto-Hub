@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import SendButton from "./SendButton";
 import ViewButton from "./ViewButton";
+import DeleteButton from "./DeleteButton";
+
 
 export default function NewsletterTable() {
   const [data, setData] = useState<any[]>([]);
@@ -15,16 +17,22 @@ export default function NewsletterTable() {
   return (
     <table className="w-full table-auto border-collapse border border-gray-300">
       <thead>
-        <tr className="py-5 bg-gray-100 text-gray-700">
-          <th>Created</th>
-          <th>Status</th>
-          <th>Sent At</th>
-          <th>Action</th>
+        <tr className=" bg-gray-100 text-gray-700 py-4">
+          <th className="px-6 py-4 text-center">Title</th>
+          <th className="px-6 py-4 text-center">Created</th>
+          <th className="px-6 py-4 text-center">Status</th>
+          <th className="px-6 py-4 text-center">Sent At</th>
+          <th className="px-6 py-4 text-center">Action</th>
         </tr>
       </thead>
       <tbody>
         {data.map((n) => (
           <tr className="border-t hover:bg-gray-50 transition" key={n.id}>
+            <td className="px-6 py-4 text-sm text-gray-700 text-center">
+              <span className="inline-flex items-center text-center">
+                {n?.title}
+              </span>
+            </td>
             <td className="px-6 py-4 text-sm text-gray-700 text-center">
               <span className="inline-flex items-center text-center">
                 {new Date(n.createdAt).toLocaleDateString()}
@@ -36,13 +44,14 @@ export default function NewsletterTable() {
               </span>
             </td>
             <td className="px-6 py-4 text-sm text-gray-700 text-center">
-              {n.broadcasts?.[0]?.sentAt
-                ? new Date(n.broadcasts[0].sentAt).toLocaleDateString()
+              {n?.sentAt
+                ? new Date(n.sentAt).toLocaleDateString()
                 : "-"}
             </td>
             <td className="px-6 py-4 text-right space-x-5 flex justify-center">
               <SendButton id={n.id} />
-              <ViewButton id={n.newsletterId}/>
+              <ViewButton id={n.id}/>
+              <DeleteButton id={n.id} />
             </td>
           </tr>
         ))}

@@ -10,14 +10,7 @@ export async function POST(req: Request) {
       title,
       subject,
       content,
-    },
-  });
-
-  await prisma.newsletterBroadcast.create({
-    data: {
-      id: crypto.randomUUID(),
-      newsletterId: newsletter.id,
-      status: "PENDING",
+      createdAt: new Date(),
     },
   });
 
@@ -25,9 +18,10 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  const broadcasts = await prisma.newsletterBroadcast.findMany({
+  const newsletters = await prisma.newsletter.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-    return NextResponse.json(broadcasts);
+
+  return NextResponse.json(newsletters);
 }

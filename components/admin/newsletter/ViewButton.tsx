@@ -1,4 +1,5 @@
-
+"use client";
+import { Eye } from "lucide-react";
 const ViewButton = ({
   id,
   disabled,
@@ -18,7 +19,7 @@ const ViewButton = ({
             disabled ? "bg-gray-400" : "bg-green-600"
         }`}
     >
-        View
+       <Eye />
     </button>
   )
 }

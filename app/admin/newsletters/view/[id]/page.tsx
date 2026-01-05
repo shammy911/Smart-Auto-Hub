@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { use } from "react";
+import { toast } from "sonner";
+
+
 export default function ViewNewsletterPage({
   params,
 }: {
@@ -42,6 +45,7 @@ export default function ViewNewsletterPage({
         console.log(data);
         setNewsletter(data);
     });
+    toast.success("Newsletter updated successfully");
   };
 
   return (
@@ -98,7 +102,7 @@ export default function ViewNewsletterPage({
           </button>
           <button
             type="button"
-            className={`mt-6 px-6 py-2 bg-red-600 text-white rounded ${edit ? "cursor-not-allowed" : ""}`} disabled={edit}
+            className={`mt-6 px-6 py-2 cursor-pointer bg-red-600 text-white rounded ${edit ? "hover:cursor-not-allowed" : ""}`} disabled={edit}
             onClick={() => {
               setEdit(!edit);
             }}
