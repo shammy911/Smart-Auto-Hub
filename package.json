@@ -7,7 +7,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start",
+    "test": "echo \"Smart Auto Hub Tests\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
