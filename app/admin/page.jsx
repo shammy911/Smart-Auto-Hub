@@ -27,6 +27,7 @@ import {
   FileText,
   Video,
   ExternalLink,
+    RefreshCcw
 } from "lucide-react";
 import NewsletterTable from "./NewsletterTable";
 import ChatBot from "@/components/ChatBot";
@@ -177,24 +178,38 @@ export default function AdminPage() {
   const [recentRequests, setRecentRequests] = useState([]);
   const [adminVehicles, setAdminVehicles] = useState([]);
 
-  const fetchBookings = async () => {
-    try {
-      const res = await fetch("/api/Consultations/getAllBooking");
-      const data = await res.json();
-      setRecentRequests(Array.isArray(data) ? data : data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch bookings", error);
-    }
-  };
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
 
-    fetchBookings();
+    const fetchBookings = async () => {
+        try {
+            const res = await fetch("/api/Consultations/getAllBooking");
+            const data = await res.json();
+            setRecentRequests(Array.isArray(data) ? data : data.data || []);
+        } catch (error) {
+            console.error("Failed to fetch bookings", error);
+        }
+    };
 
-    // ✅ Polling every 5 seconds
-    const interval = setInterval(fetchBookings, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    useEffect(()=>{
+
+        fetchBookings();
+
+    },[]);
+
+    const handleRefreshBookings = async () => {
+        try {
+            setIsRefreshing(true);
+            await fetchBookings();
+        } catch (error) {
+            console.error("Failed to refresh bookings", error);
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
+
+
+
 
   useEffect(() => {
     loadVehicles();
@@ -415,27 +430,48 @@ export default function AdminPage() {
 
           {/* Customer Requests Tab */}
           {activeTab === "requests" && (
-            <div>
+              <div>
+
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
-                <h2 className="text-2xl font-bold">Consultation Bookings</h2>
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                  <div className="relative flex-1 md:w-64">
-                    <Search
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                      size={18}
-                    />
-                    <Input
-                      placeholder="Search requests..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
+                  {/* Title + Refresh */}
+                  <div className="flex items-center gap-3">
+                      <h2 className="text-2xl font-bold">Consultation Bookings</h2>
+
+                      <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={handleRefreshBookings}
+                          disabled={isRefreshing}
+                          title="Refresh bookings"
+                      >
+                          <RefreshCcw
+                              size={18}
+                              className={isRefreshing ? "animate-spin" : ""}
+                          />
+                      </Button>
                   </div>
-                  <Button variant="outline" size="icon">
-                    <Filter size={18} />
-                  </Button>
-                </div>
+
+                  {/* Search + Filter */}
+                  <div className="flex items-center gap-3 w-full md:w-auto">
+                      <div className="relative flex-1 md:w-64">
+                          <Search
+                              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                              size={18}
+                          />
+                          <Input
+                              placeholder="Search requests..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              className="pl-10"
+                          />
+                      </div>
+
+                      <Button variant="outline" size="icon">
+                          <Filter size={18} />
+                      </Button>
+                  </div>
               </div>
+
 
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -523,10 +559,11 @@ export default function AdminPage() {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                        ))}
                   </tbody>
                 </table>
               </div>
+
             </div>
           )}
 
@@ -1077,9 +1114,9 @@ export default function AdminPage() {
                 ))}
               </div>
             </div>
-          )}
+              )}
         </div>
-      </div>
+      </div>)
       <ChatBot />
       <Footer />
     </div>
