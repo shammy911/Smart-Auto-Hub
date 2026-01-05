@@ -7,28 +7,29 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
 import {
-  Plus,
-  Search,
-  Filter,
-  MoreVertical,
-  Eye,
-  Edit,
-  Trash2,
-  Users,
-  Car,
-  Calendar,
-  Mail,
-  TrendingUp,
-  MapPin,
-  CheckCircle,
-  XCircle,
-  Clock,
-  FileText,
-  Video,
-  ExternalLink,
+    Search,
+    Filter,
+    MoreVertical,
+    Eye,
+    Edit,
+    Trash2,
+    Users,
+    Car,
+    Calendar,
+    Mail,
+    TrendingUp,
+    MapPin,
+    CheckCircle,
+    XCircle,
+    Clock,
+    FileText,
+    Video,
+    ExternalLink,
     RefreshCcw
 } from "lucide-react";
+
 import NewsletterTable from "./NewsletterTable";
 import ChatBot from "@/components/ChatBot";
 import {
