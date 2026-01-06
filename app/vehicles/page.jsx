@@ -31,7 +31,7 @@ export default function VehiclesPage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-  const vehiclesPerPage = 4;
+  const vehiclesPerPage = 6;
 
   const [sortBy, setSortBy] = useState("newest");
   const [filterStatus, setFilterStatus] = useState({

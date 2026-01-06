@@ -28,6 +28,7 @@ import {
   Video,
   ExternalLink,
   RefreshCcw,
+  Plus,
 } from "lucide-react";
 
 import NewsletterTable from "./NewsletterTable";
