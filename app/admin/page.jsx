@@ -46,6 +46,9 @@ import AddVehicleModal from "@/components/admin/AddVehicleModal";
 import ViewVehicleModal from "@/components/admin/ViewVehicleModal";
 import EditVehicleModal from "@/components/admin/EditVehicleModal";
 import DeleteVehicleModal from "@/components/admin/DeleteVehicleModal";
+import NugegodaModal from "@/components/admin/branches/NugegodaModal";
+import MataraModal from "@/components/admin/branches/MataraModal";
+import ColomboModal from "@/components/admin/branches/ColomboModal";
 
 const stats = [
   {
@@ -158,6 +161,11 @@ export default function AdminPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // Branch Modal States
+  const [isNugegodaOpen, setIsNugegodaOpen] = useState(false);
+  const [isMataraOpen, setIsMataraOpen] = useState(false);
+  const [isColomboOpen, setIsColomboOpen] = useState(false);
 
   const [recentRequests, setRecentRequests] = useState([]);
   const [adminVehicles, setAdminVehicles] = useState([]);
@@ -820,7 +828,15 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full mt-4" variant="outline">
+                    <Button 
+                      className="w-full mt-4" 
+                      variant="outline"
+                      onClick={() => {
+                        if (branch === "Nugegoda") setIsNugegodaOpen(true);
+                        if (branch === "Matara") setIsMataraOpen(true);
+                        if (branch === "Colombo") setIsColomboOpen(true);
+                      }}
+                    >
                       View Details
                     </Button>
                   </div>
@@ -850,6 +866,11 @@ export default function AdminPage() {
           onVehicleDeleted={loadVehicles}
           vehicle={selectedVehicle}
         />
+
+        {/* Branch Modals */}
+        <NugegodaModal isOpen={isNugegodaOpen} onOpenChange={setIsNugegodaOpen} />
+        <MataraModal isOpen={isMataraOpen} onOpenChange={setIsMataraOpen} />
+        <ColomboModal isOpen={isColomboOpen} onOpenChange={setIsColomboOpen} />
 
       </div>)
       <ChatBot />
