@@ -43,6 +43,9 @@ import { localStorageAPI } from "@/lib/storage/localStorage";
 import { BRANCHES } from "@/lib/branches";
 import { vehicleAPI } from "@/lib/api/vehicles";
 import AddVehicleModal from "@/components/admin/AddVehicleModal";
+import ViewVehicleModal from "@/components/admin/ViewVehicleModal";
+import EditVehicleModal from "@/components/admin/EditVehicleModal";
+import DeleteVehicleModal from "@/components/admin/DeleteVehicleModal";
 
 const stats = [
   {
@@ -150,6 +153,12 @@ export default function AdminPage() {
 
   const [isAddVehicleOpen, setIsAddVehicleOpen] = useState(false);
   
+  // Modal states for View, Edit, Delete
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [recentRequests, setRecentRequests] = useState([]);
   const [adminVehicles, setAdminVehicles] = useState([]);
 
@@ -195,6 +204,21 @@ export default function AdminPage() {
       );
       setAdminVehicles(sortedVehicles);
     }
+  };
+
+  const handleViewVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsViewModalOpen(true);
+  };
+
+  const handleEditVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsDeleteModalOpen(true);
   };
 
   const [notifications, setNotifications] = useState({
@@ -546,13 +570,28 @@ export default function AdminPage() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="ghost">
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => handleViewVehicle(vehicle)}
+                            title="View Details"
+                          >
                             <Eye size={16} />
                           </Button>
-                          <Button size="sm" variant="ghost">
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => handleEditVehicle(vehicle)}
+                            title="Edit Vehicle"
+                          >
                             <Edit size={16} />
                           </Button>
-                          <Button size="sm" variant="ghost">
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={() => handleDeleteVehicle(vehicle)} 
+                            title="Delete Vehicle"
+                          >
                             <Trash2 size={16} />
                           </Button>
                         </div>
@@ -790,6 +829,28 @@ export default function AdminPage() {
             </div>
               )}
         </div>
+
+        {/* Vehicle Action Modals */}
+        <ViewVehicleModal 
+          isOpen={isViewModalOpen}
+          onOpenChange={setIsViewModalOpen}
+          vehicle={selectedVehicle}
+        />
+
+        <EditVehicleModal
+          isOpen={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          onVehicleUpdated={loadVehicles}
+          vehicle={selectedVehicle}
+        />
+
+        <DeleteVehicleModal
+          isOpen={isDeleteModalOpen}
+          onOpenChange={setIsDeleteModalOpen}
+          onVehicleDeleted={loadVehicles}
+          vehicle={selectedVehicle}
+        />
+
       </div>)
       <ChatBot />
       <Footer />
