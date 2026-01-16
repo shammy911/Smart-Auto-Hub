@@ -61,6 +61,7 @@ import {
 import { BRANCHES } from "@/lib/branches";
 import { vehicleAPI } from "@/lib/api/vehicles";
 import { toast } from "sonner";
+import { DialogClose, DialogDescription } from "@radix-ui/react-dialog";
 
 const stats = [
   {
@@ -196,6 +197,7 @@ export default function AdminPage() {
 
   const [deleteVehicleId, setDeleteVehicleId] = useState(null);
   const [deleteVideoId, setDeleteVideoId] = useState(null);
+  const [adminMessage, setAdminMessage] = useState("");
 
   const fetchBookings = async () => {
     try {
@@ -572,6 +574,47 @@ export default function AdminPage() {
                               </button>
                             </>
                           )}
+
+                          {/* Uncommet this for Custom dialog box for message input */}
+
+                          {/* <Dialog>
+                            <DialogTrigger asChild>
+                              <button className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
+                                Send Message
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Send an Admin Message</DialogTitle>
+                                <DialogDescription>
+                                  Enter the Admin Message for the booking
+                                  request: {request.id}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <Input
+                                placeholder="Message"
+                                value={adminMessage}
+                                onChange={(e) => setAdminMessage}
+                              ></Input>
+                              <DialogFooter>
+                                <div className="flex justify-end gap-4">
+                                  <Button type="reset">Clear</Button>
+                                  <Buton
+                                    onClick={() =>
+                                      sendAdminMessagesForBookings(
+                                        request.id,
+                                        adminMessage
+                                      )
+                                    }
+                                  >
+                                    Send
+                                  </Buton>
+                                </div>
+                                <DialogClose></DialogClose>
+                                
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog> */}
                           <button
                             className="bg-blue-600 text-white px-2 py-1 rounded text-xs"
                             onClick={() =>
