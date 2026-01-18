@@ -13,6 +13,7 @@ export const authOptions = {
     providers: [
 
         CredentialsProvider({
+            id:"user-credentials",
             name: "User Credentials",
             credentials: {
                 email: {},
@@ -33,7 +34,11 @@ export const authOptions = {
 
                 if (!ok) return null;
 
-                return user;
+                return {
+                    id: user.id,
+                    email: user.email,
+                    userType: "user",
+                };
             },
         }),
 
@@ -46,6 +51,7 @@ export const authOptions = {
             },
 
             async authorize(credentials) {
+
                 if (!credentials?.email || !credentials?.password) return null;
 
                 const admin = await prisma.admin.findUnique({
@@ -92,17 +98,28 @@ export const authOptions = {
             async jwt({ token, user }) {
 
                 //this function creates the jwt token for specific user type(user/admin/advisor)
-
                 if (user) {
 
                     token.id = user.id;
-                    token.userType = user.userType;
 
+                    // If admin credentials login, userType/adminRole will exist
                     if (user.userType === "admin") {
+                        token.userType = "admin";
                         token.adminRole = user.adminRole;
+                    } else {
+                        // Any other login method => USER
+                        token.userType = "user";
+                        token.adminRole = undefined;
                     }
                 }
+
+                // IMPORTANT: OAuth logins may not provide userType later
+                // Ensure default always exists:
+                if (!token.userType) token.userType = "user";
+
                 return token;
+
+
             },
 
 
@@ -126,4 +143,5 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

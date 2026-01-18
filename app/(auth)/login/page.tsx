@@ -23,7 +23,7 @@ export default function LoginPage() {
         setError("");
 
         try {
-            await signIn("credentials", {
+            await signIn("user-credentials", {
                 email,
                 password,
                 redirect: true,
@@ -160,6 +160,13 @@ export default function LoginPage() {
                         Don&apos;t have an account?{" "}
                         <Link href="/register" className="font-semibold text-primary">
                             Register
+                        </Link>
+                    </p>
+
+                    <p className="mt-6 text-center text-sm text-gray-600">
+                        If you are an admin or an advisor
+                        <Link href="/admin/login" className="font-semibold text-primary">
+                            Go to admin Portal Login
                         </Link>
                     </p>
                 </div>
