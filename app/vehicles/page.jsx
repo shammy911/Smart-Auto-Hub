@@ -521,10 +521,10 @@ export default function VehiclesPage() {
                           </p>
                         </div>
                       </div>
-                    </Link>
                   </div>
                 ))}
               </div>
+              </>
             )}
 
             {/* Pagination */}

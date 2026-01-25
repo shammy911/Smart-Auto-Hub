@@ -206,8 +206,6 @@ export default function AdminPage() {
   const [deleteVideoId, setDeleteVideoId] = useState(null);
   const [adminMessage, setAdminMessage] = useState("");
 
-  const [videoReviews, setVideoReviews] = useState([]);
-
   const fetchBookings = async () => {
     try {
       const res = await fetch("/api/Consultations/getAllBooking");
