@@ -176,6 +176,8 @@ const videoReviews = [
 ];
 
 export default function AdminPage() {
+
+
   const [activeTab, setActiveTab] = useState("requests");
   const [searchQuery, setSearchQuery] = useState("");
   const [newsletterSubscribers, setNewsletterSubscribers] = useState(0);
@@ -199,15 +201,34 @@ export default function AdminPage() {
   const [deleteVideoId, setDeleteVideoId] = useState(null);
   const [adminMessage, setAdminMessage] = useState("");
 
-  const fetchBookings = async () => {
-    try {
-      const res = await fetch("/api/Consultations/getAllBooking");
-      const data = await res.json();
-      setRecentRequests(Array.isArray(data) ? data : data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch bookings", error);
-    }
-  };
+    const fetchBookings = async () => {
+
+        try {
+            const res = await fetch("/api/Consultations/getAllBooking");
+            const data = await res.json();
+            setRecentRequests(Array.isArray(data) ? data : data.data || []);
+        } catch (error) {
+            console.error("Failed to fetch bookings", error);
+        }
+    };
+
+    useEffect(()=>{
+
+        fetchBookings();
+
+    },[]);
+
+    const handleRefreshBookings = async () => {
+        try {
+            setIsRefreshing(true);
+            await fetchBookings();
+        } catch (error) {
+            console.error("Failed to refresh bookings", error);
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
+
 
   useEffect(() => {
     fetchBookings();

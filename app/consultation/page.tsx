@@ -230,19 +230,162 @@ export default function ConsultationPage() {
               </div>
             </div>
 
-            <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition animate-bounce-in-up delay-500">
-              <div className="flex items-start gap-4">
-                <div className="shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-purple-500/10">
-                    <MapPin className="text-purple-600" size={24} />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Multiple Locations</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Meet at any of our branches or schedule an online
-                    consultation.
-                  </p>
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) return "Email is required";
+        if (!emailRegex.test(email)) return "Please enter a valid email address";
+        return "";
+    };
+
+    const validatePhone = (phone) => {
+        if (!phone) return "Phone number is required";
+        const phoneRegex = /^0\d{9}$/;
+        if (!phoneRegex.test(phone.replace(/\s/g, ""))) {
+            return "Please enter a valid Sri Lankan phone number (10 digits starting with 0)";
+        }
+        return "";
+    };
+
+    const validateDate = (date) => {
+        if (!date) return "Preferred date is required";
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            return "Please select a future date";
+        }
+        return "";
+    };
+
+    const validateField = (name, value) => {
+        switch (name) {
+            case "fullName":
+                return !value ? "Full name is required" : "";
+            case "email":
+                return validateEmail(value);
+            case "phone":
+                return validatePhone(value);
+            case "vehicleType":
+                return !value ? "Please select a vehicle type" : "";
+            case "consultationType":
+                return !value ? "Please select a consultation type" : "";
+            case "preferredDate":
+                return validateDate(value);
+            case "preferredTime":
+                return !value ? "Please select a time slot" : "";
+            default:
+                return "";
+        }
+    };
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
+
+        if (touched[name]) {
+            const error = validateField(name, value);
+            setErrors((prev) => ({...prev, [name]: error}));
+        }
+    };
+
+    const handleBlur = (e) => {
+        const {name, value} = e.target;
+        setTouched((prev) => ({...prev, [name]: true}));
+        const error = validateField(name, value);
+        setErrors((prev) => ({...prev, [name]: error}));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const newErrors = {};
+        Object.keys(formData).forEach((key) => {
+            if (key !== "message") {
+                const error = validateField(key, formData[key]);
+                if (error) newErrors[key] = error;
+            }
+        });
+
+        const allTouched = Object.keys(formData).reduce(
+            (acc, key) => ({...acc, [key]: true}),
+            {}
+        );
+        setTouched(allTouched);
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+
+            await handleConsultationRequests(formData); // ✅ THIS IS CORRECT
+
+            toast("Booking submitted successfully!", {
+                duration: 4000,
+                icon: "📅",
+            });
+
+            setSubmitted(true);
+
+        } catch (error) {
+            console.error(error);
+            alert("Booking failed. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+
+        setTimeout(() => {
+            setFormData({
+                fullName: "",
+                email: "",
+                phone: "",
+                vehicleType: "",
+                consultationType: "",
+                preferredDate: "",
+                preferredTime: "",
+                message: "",
+            });
+            setErrors({});
+            setTouched({});
+            setSubmitted(false);
+        }, 3000);
+    };
+
+
+    const getInputClassName = (fieldName, baseClassName) => {
+        if ((submitted || touched[fieldName]) && errors[fieldName]) {
+            return `${baseClassName} border-red-500 focus:ring-red-500`;
+        }
+        return baseClassName;
+    };
+
+
+    return (
+
+        <div className="min-h-screen bg-background">
+            <Header/>
+
+            {/* Hero Section */}
+            <section
+                className="relative h-96 bg-linear-to-r from-primary via-primary/90 to-secondary text-primary-foreground flex items-center mb-24"
+                style={{
+                    backgroundImage:
+                        "url(/placeholder.svg?height=384&width=1600&query=professional car consultation advisor customer meeting)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                }}
+            >
+                <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/40 to-black/60"></div>
+                <div className="relative max-w-7xl mx-auto px-4 w-full">
+                    <h1 className="text-6xl font-bold mb-4 text-balance">
+                        Book an Appointment
+                    </h1>
+                    <p className="text-xl opacity-90 text-balance max-w-2xl">
+                        Connect with our technical experts for personalized vehicle guidance
+                        and advice.
+                    </p>
                 </div>
               </div>
             </div>
