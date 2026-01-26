@@ -71,6 +71,8 @@ import {
   deleteVideoReview,
 } from "@/app/actions/videoActions";
 
+import AdvisorSelectionModal from "@/components/AdvisorSelectionModal";
+
 const stats = [
   {
     label: "Total Vehicles",
@@ -206,6 +208,10 @@ export default function AdminPage() {
   const [deleteVehicleId, setDeleteVehicleId] = useState(null);
   const [deleteVideoId, setDeleteVideoId] = useState(null);
   const [adminMessage, setAdminMessage] = useState("");
+
+  const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
+  const [selectedRequestForAdvisor, setSelectedRequestForAdvisor] =
+    useState(null);
 
   const fetchBookings = async () => {
     try {
@@ -620,6 +626,10 @@ export default function AdminPage() {
                               <Button
                                 size="sm"
                                 className="text-xs bg-primary hover:bg-primary/90"
+                                onClick={() => {
+                                  setSelectedRequestForAdvisor(request);
+                                  setIsAdvisorModalOpen(true);
+                                }}
                               >
                                 <UserStar size={14} />
                                 Send to an Advisor
@@ -1295,6 +1305,16 @@ export default function AdminPage() {
       )
       <ChatBot />
       <Footer />
+      <AdvisorSelectionModal
+        open={isAdvisorModalOpen}
+        onClose={() => setIsAdvisorModalOpen(false)}
+        bookingSlot={selectedRequestForAdvisor?.time || ""}
+        onConfirm={(advisor) => {
+          toast.success(`Booking assigned to ${advisor.name}`);
+          setIsAdvisorModalOpen(false);
+          setSelectedRequestForAdvisor(null);
+        }}
+      />
     </div>
   );
 }
