@@ -26,7 +26,7 @@ export interface Consultation {
   consultationType: string
   preferredDate: string
   preferredTime: string
-  message: string
+  message?: string
   status?: "Pending" | "Confirmed" | "Completed" | "Cancelled"
 }
 
