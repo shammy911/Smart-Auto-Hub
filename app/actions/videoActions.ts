@@ -1,11 +1,9 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { vi } from "date-fns/locale";
 import { revalidatePath } from "next/cache";
 import { title } from "process";
-
-const prisma = new PrismaClient();
 
 //Fetch all videos (Newest first)
 export async function getVideoReviews() {
