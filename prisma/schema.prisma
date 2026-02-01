@@ -81,6 +81,9 @@ model Car {
   createdBy      Admin?         @relation("CreatedBy", fields: [createdById], references: [id])
   updatedBy      Admin?         @relation("UpdatedBy", fields: [updatedById], references: [id])
   reviews        Review[]
+  CarVector      CarVector[]
+
+  @@map("car")
 }
 
 model Branch {
@@ -237,17 +240,24 @@ enum NewsletterStatus {
   UNSUBSCRIBED
 }
 
-model CarVector {
-  id        Int                        @id
-  content   String
-  embedding Unsupported("vector(384)")
-  createdAt DateTime                   @default(now())
-
-  @@map("carVectors")
-}
-
 enum StaffRole {
   admin
   advisor
   superadmin
+}
+
+model CarVector {
+  id String @id @default(uuid()) @db.Uuid
+
+  car_id String @db.Uuid
+  car    Car    @relation(fields: [car_id], references: [id], onDelete: Cascade)
+
+  chunk_index Int
+  content     String
+  embedding   Unsupported("vector(384)")
+
+  created_at DateTime @default(now())
+
+  @@index([car_id])
+  @@map("car_vector")
 }
