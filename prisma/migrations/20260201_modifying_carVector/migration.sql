@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS carVector CASCADE;
 CREATE TABLE car_vector (
                             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-                            car_id UUID NOT NULL,
+                            car_id TEXT NOT NULL,
                             chunk_index INTEGER NOT NULL,
                             content TEXT NOT NULL,
                             embedding VECTOR(384),
@@ -15,7 +15,7 @@ CREATE TABLE car_vector (
 
                             CONSTRAINT fk_car_vector_car
                                 FOREIGN KEY (car_id)
-                                    REFERENCES car(id)
+                                    REFERENCES "Car"(id)
                                     ON DELETE CASCADE
 );
 

@@ -83,7 +83,7 @@ model Car {
   reviews        Review[]
   CarVector      CarVector[]
 
-  @@map("car")
+  @@map("Car")
 }
 
 model Branch {
@@ -249,7 +249,7 @@ enum StaffRole {
 model CarVector {
   id String @id @default(uuid()) @db.Uuid
 
-  car_id String @db.Uuid
+  car_id String
   car    Car    @relation(fields: [car_id], references: [id], onDelete: Cascade)
 
   chunk_index Int
