@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
-export default function consultationForm() {
+export default function ConsultationForm() {
   const [formData, setFormData] = useState<Consultation>({
     fullName: "",
     email: "",
