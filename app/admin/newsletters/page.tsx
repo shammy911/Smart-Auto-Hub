@@ -1,29 +1,43 @@
 "use client";
-import NewsletterTable from "@/components/admin/newsletter/NewsletterTable";
 
-export default function NewslettersPage() {
+import { Button } from "@/components/ui/button";
+import { FileText, Plus } from "lucide-react";
+import NewsletterTable from "../NewsletterTable";
+
+export default function NewsletterPage() {
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-red-600">Newsletters</h1>
-        <div className="flex gap-4 items-center">
-          <button
-            type="button"
-            className="text-gray-600 hover:text-red-600"
-            onClick={() => (window.location.href = "/admin")}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold">Newsletter Subscribers</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage your email subscriber list
+          </p>
+        </div>
+        <div className="flex gap-3 items-center">
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/admin/newsletters")}
           >
-            &larr; Back to Admin Dashboard
-          </button>
-          <a
-            href="/admin/newsletters/create"
-            className="px-4 py-2 bg-red-600 text-white rounded"
+            View Newsletters
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/admin/newsletters/create")}
           >
-            Create Newsletter
-          </a>
+            <Plus size={18} className="mr-2" />
+            Create
+          </Button>
+          <Button onClick={() => window.open("/api/subscribers/export")}>
+            <FileText size={18} className="mr-2" />
+            Export List
+          </Button>
         </div>
       </div>
 
-      <NewsletterTable />
+      <div className="bg-card rounded-lg border border-border overflow-hidden p-6">
+        <NewsletterTable />
+      </div>
     </div>
   );
 }
