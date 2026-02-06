@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -382,7 +383,9 @@ export default function AdvisorPage() {
                     </AlertDialogHeader>
                     <div className="flex justify-end gap-2">
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Logout</AlertDialogAction>
+                      <AlertDialogAction onClick={() => signOut({ callbackUrl: "/" })}>
+                        Logout
+                      </AlertDialogAction>
                     </div>
                   </AlertDialogContent>
                 </AlertDialog>
