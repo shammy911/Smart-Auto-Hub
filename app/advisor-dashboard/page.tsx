@@ -27,6 +27,8 @@ import {
   User,
   BookOpen,
   Settings,
+  Check,
+  X,
 } from "lucide-react";
 
 
@@ -87,6 +89,33 @@ export default function AdvisorPage() {
 
     fetchAdvisorBookings();
   }, []);
+
+  const updateBookingStatus = async (id: string | number, status: "ACCEPTED" | "REJECTED") => {
+    try {
+      const res = await fetch("/api/Consultations/updateBookingStatus", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId: id, status }),
+      });
+
+      if (!res.ok) {
+        console.error("Failed to update booking:", res.status);
+        return;
+      }
+
+      const updated = await res.json();
+
+      setAdvisorBookings((prev) =>
+        prev.map((booking) =>
+          booking.id === updated.id
+            ? { ...booking, status: updated.status }
+            : booking,
+        ),
+      );
+    } catch (error) {
+      console.error("Failed to update booking:", error);
+    }
+  };
 
 
 
@@ -166,7 +195,12 @@ export default function AdvisorPage() {
                 </p>
                 <p className="text-3xl font-bold">
                   {
-                    filteredBookings.filter((b) => b.status === "Confirmed")
+                    filteredBookings.filter(
+                      (b) =>
+                        b.status === "ACCEPTED" ||
+                        b.status === "CONFIRMED" ||
+                        b.status === "Confirmed",
+                    )
                       .length
                   }
                 </p>
@@ -285,14 +319,45 @@ export default function AdvisorPage() {
                       </p>
                       <div className="flex items-center gap-2">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 ${booking.status === "Confirmed"
-                            ? "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-300"
-                            : "bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
+                          className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 ${booking.status === "ACCEPTED" ||
+                              booking.status === "CONFIRMED" ||
+                              booking.status === "Confirmed"
+                              ? "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-300"
+                              : booking.status === "REJECTED"
+                                ? "bg-rose-500/20 text-rose-700 dark:bg-rose-500/30 dark:text-rose-300"
+                                : "bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
                             }`}
                         >
                           <Clock size={12} />
                           {booking.status}
                         </span>
+                        {(booking.status === "PENDING" ||
+                          booking.status === "FORWARDED") && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950"
+                                onClick={() =>
+                                  updateBookingStatus(booking.id, "ACCEPTED")
+                                }
+                              >
+                                <Check size={14} className="mr-1" />
+                                Accept
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950"
+                                onClick={() =>
+                                  updateBookingStatus(booking.id, "REJECTED")
+                                }
+                              >
+                                <X size={14} className="mr-1" />
+                                Reject
+                              </Button>
+                            </>
+                          )}
                         <Button size="sm" variant="outline">
                           <MessageCircle size={14} className="mr-1" />
                           Contact Customer
