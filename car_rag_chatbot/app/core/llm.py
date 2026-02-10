@@ -55,7 +55,6 @@ def generate_response(
     Generate a grounded response using Phi-3.
     """
 
-    # Guard: no retrieval → no generation
     if not retrieved_cars:
         return "Sorry, I don't have matching cars for that."
 
