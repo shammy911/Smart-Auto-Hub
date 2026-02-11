@@ -1,0 +1,943 @@
+text,intent
+hello,greeting
+hi,greeting
+hey,greeting
+hey there,greeting
+hello there,greeting
+hi there,greeting
+good morning,greeting
+good afternoon,greeting
+good evening,greeting
+is anyone here,greeting
+are you there,greeting
+hello buddy,greeting
+hi buddy,greeting
+hey buddy,greeting
+hello friend,greeting
+hi friend,greeting
+hey friend,greeting
+yo,greeting
+yo there,greeting
+hello chatbot,greeting
+hi chatbot,greeting
+hey chatbot,greeting
+hello assistant,greeting
+hi assistant,greeting
+hey assistant,greeting
+morning,greeting
+evening,greeting
+afternoon,greeting
+hey man,greeting
+hi man,greeting
+hello man,greeting
+hello bro,greeting
+hi bro,greeting
+hey bro,greeting
+sup,greeting
+sup there,greeting
+hello hello,greeting
+hi hi,greeting
+hey hey,greeting
+hello everyone,greeting
+hi everyone,greeting
+hey everyone,greeting
+greetings,greeting
+greetings there,greeting
+hello again,greeting
+hi again,greeting
+hey again,greeting
+good day,greeting
+very good morning,greeting
+very good evening,greeting
+very good afternoon,greeting
+hey whats up,greeting
+hi whats up,greeting
+hello whats up,greeting
+hello team,greeting
+hi team,greeting
+hey team,greeting
+hello system,greeting
+hi system,greeting
+hey system,greeting
+hello bot,greeting
+hi bot,greeting
+hey bot,greeting
+hello support,greeting
+hi support,greeting
+hey support,greeting
+hello service,greeting
+hi service,greeting
+hey service,greeting
+hello ai,greeting
+hi ai,greeting
+hey ai,greeting
+hello there assistant,greeting
+hi there assistant,greeting
+hey there assistant,greeting
+hello helpdesk,greeting
+hi helpdesk,greeting
+hey helpdesk,greeting
+hello sales,greeting
+hi sales,greeting
+hey sales,greeting
+hello online,greeting
+hi online,greeting
+hey online,greeting
+hello platform,greeting
+hi platform,greeting
+hey platform,greeting
+hello app,greeting
+hi app,greeting
+hey app,greeting
+hello interface,greeting
+hi interface,greeting
+hey interface,greeting
+hello again bot,greeting
+hi again bot,greeting
+hey again bot,greeting
+hello quick question,greeting
+hi quick question,greeting
+hey quick question,greeting
+hello need help,greeting
+hi need help,greeting
+hey need help,greeting
+hello just checking,greeting
+hi just checking,greeting
+hey just checking,greeting
+hello someone,greeting
+hi someone,greeting
+hey someone,greeting
+bye,goodbye
+goodbye,goodbye
+see you,goodbye
+see you later,goodbye
+talk to you later,goodbye
+thanks bye,goodbye
+bye bye,goodbye
+ok bye,goodbye
+alright bye,goodbye
+i am leaving,goodbye
+i have to go,goodbye
+catch you later,goodbye
+good night,goodbye
+good day,goodbye
+have a nice day,goodbye
+see ya,goodbye
+see ya later,goodbye
+bye for now,goodbye
+talk later,goodbye
+ending chat,goodbye
+exit,goodbye
+quit,goodbye
+close chat,goodbye
+logging out,goodbye
+signing off,goodbye
+thanks goodbye,goodbye
+thank you bye,goodbye
+bye thanks,goodbye
+bye see you,goodbye
+see you soon,goodbye
+i am done,goodbye
+finished here,goodbye
+done for now,goodbye
+end conversation,goodbye
+stop chat,goodbye
+good night bot,goodbye
+goodbye assistant,goodbye
+bye assistant,goodbye
+bye chatbot,goodbye
+bye system,goodbye
+see you chatbot,goodbye
+talk later bot,goodbye
+thanks for help bye,goodbye
+leaving now,goodbye
+disconnect,goodbye
+end now,goodbye
+closing now,goodbye
+stop now,goodbye
+bye have a good day,goodbye
+bye have a nice day,goodbye
+bye thanks a lot,goodbye
+bye appreciate it,goodbye
+goodbye for now,goodbye
+ok see you,goodbye
+ok bye bye,goodbye
+bye take care,goodbye
+goodbye take care,goodbye
+i will leave now,goodbye
+i am exiting,goodbye
+exiting chat,goodbye
+closing conversation,goodbye
+that is all bye,goodbye
+nothing else bye,goodbye
+finished bye,goodbye
+chat ended bye,goodbye
+logging off now,goodbye
+bye logging out,goodbye
+thanks done bye,goodbye
+end session,goodbye
+session ended,goodbye
+show me cars,search_car
+i want to buy a car,search_car
+find cars for sale,search_car
+list available cars,search_car
+show available vehicles,search_car
+i am looking for a car,search_car
+do you have cars for sale,search_car
+can i see car listings,search_car
+what cars are available,search_car
+help me find a car,search_car
+show me used cars,search_car
+show me new cars,search_car
+i want to see cars,search_car
+browse cars,search_car
+search for cars,search_car
+find vehicles,search_car
+car listings please,search_car
+available cars please,search_car
+cars for sale near me,search_car
+show car inventory,search_car
+display car options,search_car
+i need a car,search_car
+looking to purchase a car,search_car
+want to buy vehicle,search_car
+help me buy a car,search_car
+any cars available,search_car
+do you sell cars,search_car
+car showroom list,search_car
+show showroom cars,search_car
+available models please,search_car
+find me a car,search_car
+search vehicles for sale,search_car
+can you show cars,search_car
+i want car options,search_car
+show me all cars,search_car
+search car models,search_car
+list car models,search_car
+what vehicles do you have,search_car
+show me vehicle list,search_car
+display all vehicles,search_car
+show car catalog,search_car
+car catalog please,search_car
+need to see cars,search_car
+i am shopping for a car,search_car
+looking for vehicle options,search_car
+browse vehicle list,search_car
+find available vehicles,search_car
+show cars you have,search_car
+car options available,search_car
+what is the price,ask_price
+how much does it cost,ask_price
+price of this car,ask_price
+what is the cost,ask_price
+how much should i pay,ask_price
+tell me the price,ask_price
+what is the selling price,ask_price
+how expensive is this car,ask_price
+price details please,ask_price
+can you tell me the price,ask_price
+what is the rate,ask_price
+price info,ask_price
+how much money is needed,ask_price
+cost of this vehicle,ask_price
+what is the total price,ask_price
+what is the final price,ask_price
+price please,ask_price
+cost please,ask_price
+how much for this car,ask_price
+how much is this vehicle,ask_price
+what is asking price,ask_price
+what price are you offering,ask_price
+how much are you selling it for,ask_price
+tell me cost details,ask_price
+what is the amount,ask_price
+price range please,ask_price
+what is minimum price,ask_price
+what is maximum price,ask_price
+does it fit my budget,ask_price
+price quotation please,ask_price
+can i know the cost,ask_price
+what is vehicle price,ask_price
+car price please,ask_price
+what is current price,ask_price
+how much does this model cost,ask_price
+what is the value,ask_price
+is it expensive,ask_price
+is it affordable,ask_price
+give price info,ask_price
+tell me pricing,ask_price
+tell me more about this car,ask_details
+give me car details,ask_details
+what are the specifications,ask_details
+i want more information,ask_details
+show car details,ask_details
+what features does it have,ask_details
+tell me about this vehicle,ask_details
+give full details of the car,ask_details
+i need car information,ask_details
+explain the car features,ask_details
+show specifications,ask_details
+technical details please,ask_details
+tell me specs,ask_details
+vehicle specifications,ask_details
+car specs please,ask_details
+explain this car,ask_details
+what comes with this car,ask_details
+details of this model,ask_details
+what are the features,ask_details
+more info about this car,ask_details
+i want to know everything,ask_details
+give me full info,ask_details
+describe the car,ask_details
+vehicle description,ask_details
+explain vehicle details,ask_details
+what is included,ask_details
+car information please,ask_details
+tell me engine details,ask_details
+tell me mileage,ask_details
+fuel type details,ask_details
+interior features,ask_details
+exterior features,ask_details
+safety features,ask_details
+technology features,ask_details
+full specification list,ask_details
+model details please,ask_details
+variant details,ask_details
+tell me about performance,ask_details
+explain performance details,ask_details
+what should i know about this car,ask_details
+show me toyota cars,filter_brand
+i want toyota vehicles,filter_brand
+find honda cars,filter_brand
+show honda models,filter_brand
+list nissan cars,filter_brand
+i am looking for a bmw,filter_brand
+show me bmw cars,filter_brand
+find mercedes cars,filter_brand
+show benz vehicles,filter_brand
+i want a ford car,filter_brand
+show ford models,filter_brand
+find suzuki cars,filter_brand
+show suzuki vehicles,filter_brand
+i want a kia car,filter_brand
+show kia cars,filter_brand
+find hyundai vehicles,filter_brand
+show hyundai models,filter_brand
+looking for toyota corolla,filter_brand
+find honda civic,filter_brand
+show bmw x series,filter_brand
+mercedes cars available,filter_brand
+ford cars list,filter_brand
+toyota models please,filter_brand
+honda car options,filter_brand
+bmw vehicles available,filter_brand
+show me audi cars,filter_brand
+find audi vehicles,filter_brand
+looking for audi models,filter_brand
+show volkswagen cars,filter_brand
+find vw vehicles,filter_brand
+nissan car options,filter_brand
+mazda cars please,filter_brand
+find mazda models,filter_brand
+show lexus cars,filter_brand
+looking for lexus vehicles,filter_brand
+show mitsubishi cars,filter_brand
+find mitsubishi models,filter_brand
+toyota cars only,filter_brand
+honda brand cars,filter_brand
+bmw brand vehicles,filter_brand
+benz brand cars,filter_brand
+cars from toyota,filter_brand
+cars from honda,filter_brand
+cars from bmw,filter_brand
+cars from ford,filter_brand
+cars from kia,filter_brand
+cars from hyundai,filter_brand
+cars from nissan,filter_brand
+cars from audi,filter_brand
+cars under 5 million,filter_price_range
+show cars below 4 million,filter_price_range
+find cars under 3 million,filter_price_range
+cars less than 6 million,filter_price_range
+show budget cars,filter_price_range
+cheap cars available,filter_price_range
+cars within my budget,filter_price_range
+affordable cars only,filter_price_range
+cars below my price range,filter_price_range
+find low price cars,filter_price_range
+cars under 10k,filter_price_range
+cars under 15000 dollars,filter_price_range
+show cars below 20000,filter_price_range
+cars cheaper than 8 million,filter_price_range
+cars below 7 million,filter_price_range
+mid range cars please,filter_price_range
+show premium cars,filter_price_range
+luxury cars only,filter_price_range
+high end cars,filter_price_range
+cars above 10 million,filter_price_range
+cars between 3 and 5 million,filter_price_range
+cars from 5 to 7 million,filter_price_range
+cars in range 4 to 6 million,filter_price_range
+cars around 5 million,filter_price_range
+cars near my budget,filter_price_range
+show economical cars,filter_price_range
+find cars i can afford,filter_price_range
+cars for low budget,filter_price_range
+cars for high budget,filter_price_range
+cars within 2 million,filter_price_range
+cars below 1 million,filter_price_range
+cars between 1 and 3 million,filter_price_range
+cars under 2 million,filter_price_range
+budget friendly vehicles,filter_price_range
+price filtered cars,filter_price_range
+show cost wise cars,filter_price_range
+cars by price,filter_price_range
+filter cars by price,filter_price_range
+price range cars,filter_price_range
+cars sorted by price,filter_price_range
+cars from 2020,filter_year
+show 2021 cars,filter_year
+find cars from 2019,filter_year
+cars manufactured in 2018,filter_year
+latest year cars,filter_year
+new model cars,filter_year
+recent cars only,filter_year
+old cars available,filter_year
+cars before 2015,filter_year
+cars after 2020,filter_year
+cars from last year,filter_year
+cars from this year,filter_year
+cars older than 10 years,filter_year
+cars newer than 5 years,filter_year
+used cars from 2017,filter_year
+cars made in 2016,filter_year
+2015 model cars,filter_year
+2014 cars list,filter_year
+2013 vehicle options,filter_year
+cars by year,filter_year
+filter cars by year,filter_year
+year wise car list,filter_year
+cars sorted by year,filter_year
+cars from early 2000s,filter_year
+cars after 2010,filter_year
+cars before 2022,filter_year
+latest vehicles available,filter_year
+oldest cars available,filter_year
+cars from 2022,filter_year
+cars from 2023,filter_year
+cars manufactured recently,filter_year
+cars made long ago,filter_year
+cars from past years,filter_year
+cars by manufacture year,filter_year
+year specific cars,filter_year
+show vehicles by year,filter_year
+find cars by year,filter_year
+manufacturing year cars,filter_year
+cars year filter,filter_year
+year range vehicles,filter_year
+petrol cars only,filter_fuel_type
+diesel cars available,filter_fuel_type
+electric cars,filter_fuel_type
+hybrid vehicles,filter_fuel_type
+show petrol vehicles,filter_fuel_type
+find diesel cars,filter_fuel_type
+electric vehicles list,filter_fuel_type
+hybrid cars only,filter_fuel_type
+fuel efficient cars,filter_fuel_type
+low fuel consumption cars,filter_fuel_type
+cars with petrol engine,filter_fuel_type
+cars with diesel engine,filter_fuel_type
+battery powered cars,filter_fuel_type
+electric only cars,filter_fuel_type
+plug in hybrid cars,filter_fuel_type
+fuel type petrol,filter_fuel_type
+fuel type diesel,filter_fuel_type
+fuel type electric,filter_fuel_type
+fuel type hybrid,filter_fuel_type
+show cars by fuel,filter_fuel_type
+filter by fuel type,filter_fuel_type
+cars using petrol,filter_fuel_type
+cars using diesel,filter_fuel_type
+cars using electricity,filter_fuel_type
+cars with hybrid system,filter_fuel_type
+eco friendly cars,filter_fuel_type
+environment friendly vehicles,filter_fuel_type
+fuel based cars,filter_fuel_type
+petrol engine cars,filter_fuel_type
+diesel engine vehicles,filter_fuel_type
+electric engine cars,filter_fuel_type
+hybrid engine cars,filter_fuel_type
+low emission vehicles,filter_fuel_type
+cars with good mileage,filter_fuel_type
+best fuel economy cars,filter_fuel_type
+fuel saving cars,filter_fuel_type
+alternative fuel cars,filter_fuel_type
+traditional fuel cars,filter_fuel_type
+green vehicles,filter_fuel_type
+clean energy cars,filter_fuel_type
+automatic cars only,filter_transmission
+manual cars available,filter_transmission
+show automatic vehicles,filter_transmission
+find manual cars,filter_transmission
+cars with auto transmission,filter_transmission
+cars with manual transmission,filter_transmission
+automatic gear cars,filter_transmission
+manual gear vehicles,filter_transmission
+automatic transmission only,filter_transmission
+manual transmission only,filter_transmission
+cars without clutch,filter_transmission
+cars with clutch,filter_transmission
+easy driving cars,filter_transmission
+manual driving cars,filter_transmission
+automatic models available,filter_transmission
+manual models available,filter_transmission
+auto cars please,filter_transmission
+manual cars please,filter_transmission
+cars by transmission,filter_transmission
+filter cars by transmission,filter_transmission
+transmission type automatic,filter_transmission
+transmission type manual,filter_transmission
+cars with cvt,filter_transmission
+cars with dual clutch,filter_transmission
+cars with gear system,filter_transmission
+no gear change cars,filter_transmission
+stick shift cars,filter_transmission
+auto gear vehicles,filter_transmission
+manual gear cars,filter_transmission
+driving type automatic,filter_transmission
+driving type manual,filter_transmission
+automatic driving preferred,filter_transmission
+manual driving preferred,filter_transmission
+transmission based cars,filter_transmission
+show me automatic cars,filter_transmission
+show me manual cars,filter_transmission
+find automatic vehicles,filter_transmission
+find manual vehicles,filter_transmission
+gearbox type cars,filter_transmission
+transmission filter cars,filter_transmission
+show me sedan cars,filter_body_type
+i want a sedan,filter_body_type
+find suv cars,filter_body_type
+show suv vehicles,filter_body_type
+looking for a hatchback,filter_body_type
+hatchback cars available,filter_body_type
+show coupe cars,filter_body_type
+find coupe vehicles,filter_body_type
+i want a convertible,filter_body_type
+convertible cars list,filter_body_type
+show pickup trucks,filter_body_type
+find pickup vehicles,filter_body_type
+looking for a van,filter_body_type
+van type cars available,filter_body_type
+show wagon cars,filter_body_type
+estate cars list,filter_body_type
+show crossover vehicles,filter_body_type
+find crossover cars,filter_body_type
+suv body type cars,filter_body_type
+sedan body cars,filter_body_type
+hatchback models only,filter_body_type
+coupe body vehicles,filter_body_type
+open roof cars,filter_body_type
+family suv cars,filter_body_type
+small hatchback cars,filter_body_type
+large suv vehicles,filter_body_type
+two door cars,filter_body_type
+four door sedan cars,filter_body_type
+off road vehicles,filter_body_type
+pickup style vehicles,filter_body_type
+low mileage cars,filter_mileage
+cars with less mileage,filter_mileage
+high mileage cars,filter_mileage
+cars driven less,filter_mileage
+cars driven under 50000 km,filter_mileage
+cars under 100000 km,filter_mileage
+cars with good mileage history,filter_mileage
+show cars with low usage,filter_mileage
+used cars with less running,filter_mileage
+cars with heavy usage,filter_mileage
+cars driven a lot,filter_mileage
+low run vehicles,filter_mileage
+high run vehicles,filter_mileage
+cars with minimum mileage,filter_mileage
+cars with maximum mileage,filter_mileage
+filter cars by mileage,filter_mileage
+mileage based cars,filter_mileage
+cars sorted by mileage,filter_mileage
+cars with low km count,filter_mileage
+cars with high km count,filter_mileage
+well maintained low mileage cars,filter_mileage
+cars with average mileage,filter_mileage
+mileage wise vehicle list,filter_mileage
+cars driven below average,filter_mileage
+cars driven above average,filter_mileage
+km based filtering,filter_mileage
+show vehicles by mileage,filter_mileage
+find cars by mileage,filter_mileage
+mileage range cars,filter_mileage
+cars with mileage filter,filter_mileage
+brand new cars,filter_condition
+used cars only,filter_condition
+second hand cars,filter_condition
+pre owned vehicles,filter_condition
+show new cars,filter_condition
+show used vehicles,filter_condition
+cars in excellent condition,filter_condition
+cars in good condition,filter_condition
+cars in fair condition,filter_condition
+old condition cars,filter_condition
+well maintained cars,filter_condition
+poor condition cars,filter_condition
+like new cars,filter_condition
+almost new vehicles,filter_condition
+refurbished cars,filter_condition
+reconditioned vehicles,filter_condition
+cars needing repair,filter_condition
+cars without damage,filter_condition
+accident free cars,filter_condition
+cars with minor damage,filter_condition
+cars with major damage,filter_condition
+clean condition cars,filter_condition
+cars with service history,filter_condition
+non accident vehicles,filter_condition
+used but clean cars,filter_condition
+newly registered cars,filter_condition
+old registered vehicles,filter_condition
+condition based cars,filter_condition
+filter by condition,filter_condition
+condition wise vehicles,filter_condition
+first owner cars,filter_owner_type
+single owner vehicles,filter_owner_type
+second owner cars,filter_owner_type
+multiple owner cars,filter_owner_type
+cars with one owner,filter_owner_type
+cars with two owners,filter_owner_type
+cars with many owners,filter_owner_type
+company owned cars,filter_owner_type
+personal owner vehicles,filter_owner_type
+privately owned cars,filter_owner_type
+cars owned by company,filter_owner_type
+owner count one,filter_owner_type
+owner count two,filter_owner_type
+owner type personal,filter_owner_type
+owner type corporate,filter_owner_type
+low owner count cars,filter_owner_type
+high owner count cars,filter_owner_type
+cars with ownership history,filter_owner_type
+single hand cars,filter_owner_type
+second hand ownership cars,filter_owner_type
+ownership based filtering,filter_owner_type
+cars by owner type,filter_owner_type
+filter cars by owner,filter_owner_type
+show cars by ownership,filter_owner_type
+first registered owner cars,filter_owner_type
+cars with previous owners,filter_owner_type
+cars with no owner change,filter_owner_type
+ownership category vehicles,filter_owner_type
+owner wise car list,filter_owner_type
+ownership filtered cars,filter_owner_type
+cars near me,filter_location
+cars in my area,filter_location
+show cars in colombo,filter_location
+cars available in kandy,filter_location
+vehicles in galle,filter_location
+cars in negombo,filter_location
+cars available nearby,filter_location
+find cars close to me,filter_location
+cars in my city,filter_location
+cars in my location,filter_location
+search cars by city,filter_location
+filter cars by location,filter_location
+cars by area,filter_location
+cars in western province,filter_location
+cars in central province,filter_location
+cars in southern province,filter_location
+cars around my place,filter_location
+vehicles near my location,filter_location
+show vehicles nearby,filter_location
+cars available locally,filter_location
+cars in sri lanka,filter_location
+cars in this region,filter_location
+local cars available,filter_location
+cars in town,filter_location
+cars outside city,filter_location
+cars inside city,filter_location
+cars by region,filter_location
+cars by district,filter_location
+location wise vehicles,filter_location
+filter vehicles by location,filter_location
+sort cars by price,sort_price
+show cheapest cars first,sort_price
+show most expensive cars first,sort_price
+order cars by price,sort_price
+price low to high,sort_price
+price high to low,sort_price
+cars sorted by price,sort_price
+arrange cars by price,sort_price
+show cars in ascending price,sort_price
+show cars in descending price,sort_price
+list low price cars first,sort_price
+list high price cars first,sort_price
+sort vehicle list by cost,sort_price
+sort by cheapest,sort_price
+sort by expensive,sort_price
+order vehicles by price,sort_price
+price wise sorting,sort_price
+price based ordering,sort_price
+sort car results by price,sort_price
+price order cars,sort_price
+sort cars according to price,sort_price
+show affordable cars first,sort_price
+show premium cars first,sort_price
+price sorted vehicles,sort_price
+sort cars low price first,sort_price
+sort cars high price first,sort_price
+price sorting option,sort_price
+organize cars by price,sort_price
+reorder cars by price,sort_price
+price filter sorting,sort_price
+sort cars by year,sort_year
+show newest cars first,sort_year
+show oldest cars first,sort_year
+order cars by year,sort_year
+latest models first,sort_year
+old models first,sort_year
+cars sorted by year,sort_year
+arrange cars by year,sort_year
+year ascending order,sort_year
+year descending order,sort_year
+sort by newest,sort_year
+sort by oldest,sort_year
+recent cars on top,sort_year
+older cars on top,sort_year
+year wise sorting,sort_year
+manufacture year sorting,sort_year
+sort vehicles by year,sort_year
+year based ordering,sort_year
+reorder cars by year,sort_year
+sort results by model year,sort_year
+show latest vehicles first,sort_year
+show early year cars first,sort_year
+year sorted car list,sort_year
+organize cars by year,sort_year
+year priority sorting,sort_year
+sort cars year wise,sort_year
+arrange vehicles by year,sort_year
+year filter sorting,sort_year
+model year ordering,sort_year
+sort based on year,sort_year
+sort cars by mileage,sort_mileage
+show low mileage cars first,sort_mileage
+show high mileage cars first,sort_mileage
+order cars by mileage,sort_mileage
+cars sorted by mileage,sort_mileage
+arrange cars by mileage,sort_mileage
+mileage low to high,sort_mileage
+mileage high to low,sort_mileage
+sort by mileage,sort_mileage
+mileage wise sorting,sort_mileage
+sort vehicles by mileage,sort_mileage
+reorder cars by mileage,sort_mileage
+show less driven cars first,sort_mileage
+show more driven cars first,sort_mileage
+mileage based ordering,sort_mileage
+sort results by mileage,sort_mileage
+organize cars by mileage,sort_mileage
+mileage priority sorting,sort_mileage
+mileage sorted list,sort_mileage
+arrange vehicles by km,sort_mileage
+km based sorting,sort_mileage
+sort cars using mileage,sort_mileage
+mileage ascending order,sort_mileage
+mileage descending order,sort_mileage
+sort by lowest mileage,sort_mileage
+sort by highest mileage,sort_mileage
+show mileage sorted cars,sort_mileage
+mileage filter sorting,sort_mileage
+order cars by km driven,sort_mileage
+sort cars mileage wise,sort_mileage
+compare two cars,compare_cars
+compare these cars,compare_cars
+car comparison,compare_cars
+compare car models,compare_cars
+difference between two cars,compare_cars
+compare prices of cars,compare_cars
+compare features of cars,compare_cars
+compare mileage of cars,compare_cars
+which car is better,compare_cars
+compare car options,compare_cars
+compare vehicle details,compare_cars
+side by side comparison,compare_cars
+compare specifications,compare_cars
+compare performance of cars,compare_cars
+compare these models,compare_cars
+show car comparison,compare_cars
+compare selected cars,compare_cars
+comparison between vehicles,compare_cars
+help me compare cars,compare_cars
+compare similar cars,compare_cars
+compare two models,compare_cars
+compare toyota vs honda,compare_cars
+compare bmw and audi,compare_cars
+vehicle comparison tool,compare_cars
+compare price and features,compare_cars
+compare fuel efficiency,compare_cars
+compare safety features,compare_cars
+compare engine specs,compare_cars
+comparison details please,compare_cars
+which model should i choose,compare_cars
+is this car available,check_availability
+is the car still available,check_availability
+do you have this car,check_availability
+is this model in stock,check_availability
+availability of this car,check_availability
+check car availability,check_availability
+is it available now,check_availability
+is this vehicle available,check_availability
+can i buy this car now,check_availability
+is the car sold out,check_availability
+is this car currently available,check_availability
+availability status please,check_availability
+do you still sell this car,check_availability
+is this car in your inventory,check_availability
+can i book this car,check_availability
+is this model still for sale,check_availability
+is the vehicle in stock,check_availability
+check if car is available,check_availability
+availability check,check_availability
+confirm availability,check_availability
+is this car listed,check_availability
+is this listing active,check_availability
+can i reserve this car,check_availability
+is this car ready to buy,check_availability
+stock status of this car,check_availability
+availability confirmation needed,check_availability
+is the model available now,check_availability
+do you have stock,check_availability
+is this unit available,check_availability
+is it still for sale,check_availability
+i want to book a test drive,book_test_drive
+book a test drive,book_test_drive
+schedule a test drive,book_test_drive
+can i test drive this car,book_test_drive
+i want to try the car,book_test_drive
+test drive request,book_test_drive
+arrange a test drive,book_test_drive
+how can i test drive this car,book_test_drive
+test drive booking please,book_test_drive
+i would like a test drive,book_test_drive
+can i schedule a test drive,book_test_drive
+book test drive for tomorrow,book_test_drive
+test drive appointment,book_test_drive
+test drive availability,book_test_drive
+want to check car by driving,book_test_drive
+requesting a test drive,book_test_drive
+can i take a test drive,book_test_drive
+i want to feel the car before buying,book_test_drive
+test drive this model,book_test_drive
+book a driving trial,book_test_drive
+schedule driving test,book_test_drive
+test run the vehicle,book_test_drive
+drive the car before purchase,book_test_drive
+trial drive booking,book_test_drive
+book demo drive,book_test_drive
+i want to contact the seller,contact_seller
+give me seller contact details,contact_seller
+how can i reach the seller,contact_seller
+contact car owner,contact_seller
+seller phone number please,contact_seller
+seller email address,contact_seller
+connect me with the seller,contact_seller
+talk to the seller,contact_seller
+call the seller,contact_seller
+message the seller,contact_seller
+how do i contact the owner,contact_seller
+seller details please,contact_seller
+get seller information,contact_seller
+reach out to seller,contact_seller
+seller contact info,contact_seller
+can i speak to the seller,contact_seller
+need seller phone number,contact_seller
+share seller contact,contact_seller
+seller communication,contact_seller
+contact dealership,contact_seller
+dealer contact details,contact_seller
+connect with dealer,contact_seller
+dealer phone number,contact_seller
+dealer email address,contact_seller
+how to contact dealer,contact_seller
+can you lower the price,negotiate_price
+is the price negotiable,negotiate_price
+can i get a discount,negotiate_price
+final price please,negotiate_price
+what is your best price,negotiate_price
+can we negotiate the price,negotiate_price
+is there any discount available,negotiate_price
+reduce the price please,negotiate_price
+can you give me a better deal,negotiate_price
+last price of the car,negotiate_price
+best offer you can give,negotiate_price
+price negotiation possible,negotiate_price
+can we talk about price,negotiate_price
+is this the final price,negotiate_price
+any room for negotiation,negotiate_price
+can you adjust the price,negotiate_price
+price seems high can you reduce,negotiate_price
+looking for a lower price,negotiate_price
+can you offer discount,negotiate_price
+negotiate car price,negotiate_price
+what is lowest price,negotiate_price
+can you make it cheaper,negotiate_price
+asking for discount,negotiate_price
+better price possible,negotiate_price
+final offer please,negotiate_price
+do you offer financing,financing_options
+car loan options,financing_options
+can i buy this car on loan,financing_options
+installment plans available,financing_options
+monthly payment options,financing_options
+finance options for this car,financing_options
+bank loan available,financing_options
+leasing options,financing_options
+emi options please,financing_options
+how much is monthly installment,financing_options
+can i pay in installments,financing_options
+credit options available,financing_options
+car financing details,financing_options
+loan facilities for this car,financing_options
+down payment required,financing_options
+what are financing terms,financing_options
+finance support available,financing_options
+hire purchase options,financing_options
+payment plan details,financing_options
+car loan assistance,financing_options
+emi calculation,financing_options
+finance this vehicle,financing_options
+bank financing supported,financing_options
+monthly emi details,financing_options
+installment based purchase,financing_options
+i dont understand,fallback_help
+can you help me,fallback_help
+what can you do,fallback_help
+i am confused,fallback_help
+this is not what i want,fallback_help
+that did not help,fallback_help
+i need assistance,fallback_help
+help me please,fallback_help
+not sure what to do,fallback_help
+can you explain,fallback_help
+i need more help,fallback_help
+something went wrong,fallback_help
+this is confusing,fallback_help
+i am stuck,fallback_help
+what now,fallback_help
+i dont know,fallback_help
+please guide me,fallback_help
+help,fallback_help
+need support,fallback_help
+assist me,fallback_help
+can you clarify,fallback_help
+that makes no sense,fallback_help
+i need guidance,fallback_help
+how does this work,fallback_help
+i need help with this,fallback_help
+
