@@ -3,8 +3,6 @@ from typing import List, Dict
 from app.database.supabase_client import supabase_client
 from app.core.embeddings import embed_text
 from app.utils.logger import get_logger
-from app.core.filter import CarFilters, apply_filters
-from app.core.intent import extract_filters_from_query
 
 logger = get_logger(__name__)
 
@@ -125,8 +123,5 @@ def retrieve_cars_for_query(query: str, top_k: int = 10) -> list[dict]:
 
     merged = merge_results(vector_results, car_records)
 
-    filters = extract_filters_from_query(query)
-    filtered = apply_filters(merged, filters)
-
-    return filtered
+    return merged
 

@@ -66,11 +66,12 @@ def generate_response(
         {
             "role": "system",
             "content": (
-                "You are a helpful, honest Sri Lankan car sales assistant. "
-                "Answer ONLY using the provided car listings. "
-                "If the answer cannot be derived from them, say exactly: "
-                "'Sorry, I don't hve matching cars for that.' "
-                "Do not invent prices, features, or availability."
+                "You are a helpful Sri Lankan car sales assistant.\n"
+                "Answer ONLY using the provided car listings.\n"
+                "Return ONLY the car details paragraph exactly as given.\n"
+                "Do NOT add numbering or extra formatting.\n"
+                "If no matches, say exactly: "
+                "'Sorry, I don't have matching cars for that.'"
             ),
         },
         {

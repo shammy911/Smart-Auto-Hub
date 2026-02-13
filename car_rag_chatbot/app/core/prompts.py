@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 
-def build_prompt(retrieved_cars: List[Dict]) -> str:
+def build_prompt(retrieved_cars: List[Dict] = None) -> str:
     """
     Build ONLY contextual car information.
     This function must NOT include roles, instructions,
@@ -22,4 +22,6 @@ def build_prompt(retrieved_cars: List[Dict]) -> str:
         )
 
     return "\n".join(lines) 
+
+context = build_prompt()
 
